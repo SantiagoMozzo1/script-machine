@@ -1524,10 +1524,19 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
 
         <div class="action-row">
-          <button class="copy-all-btn" onclick="copyAll()">📋 Copiar todo</button>
+          <button class="copy-all-btn" onclick="nuevoGuion()">✦ Nuevo guión</button>
+          <button class="copy-all-btn" onclick="copyAll()">📋 Copiar</button>
           <button class="copy-all-btn" onclick="generarVariacion()">🔀 Variación</button>
           <button class="copy-all-btn" onclick="exportarPDF()">⬇️ Exportar</button>
-          <button class="save-btn" onclick="saveScript()">💾 Guardar guión</button>
+          <button class="save-btn" onclick="saveScript()">💾 Guardar</button>
+        </div>
+
+        <!-- EDITAR CON IA -->
+        <div style="margin-top:16px; background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); padding:16px; display:none;" id="edit-ia-panel">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); margin-bottom:10px;">✏️ Editar con IA</div>
+          <div style="font-size:12px; color:var(--text2); margin-bottom:10px;">Decile a la IA qué mejorar y va a reescribir el guión en base a tu feedback.</div>
+          <textarea class="text-input" id="edit-feedback" placeholder="Ej: El hook es muy largo, acortalo a 8 palabras. El CTA no es específico, quiero que mencione una plantilla de contenido. El problema no genera urgencia suficiente..." style="min-height:70px;"></textarea>
+          <button class="gen-btn" style="margin-top:10px;" id="btn-edit-ia" onclick="editarConIA()">✨ Aplicar cambios</button>
         </div>
       </div>
     </div>
@@ -2088,9 +2097,18 @@ input[type="range"]::-webkit-slider-thumb {
     <button class="modal-close" onclick="closeModal()">×</button>
     <div class="modal-title" id="modal-title">Guión</div>
     <div id="modal-content"></div>
-    <div class="action-row" style="margin-top:20px;">
-      <button class="copy-all-btn" onclick="copyModalScript()">📋 Copiar todo</button>
-      <button class="save-btn" onclick="addModalToCalendar()">📅 Agregar al calendario</button>
+
+    <!-- EDITAR CON IA en modal -->
+    <div style="margin-top:16px; background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;" id="modal-edit-panel">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); margin-bottom:8px;">✏️ Editar con IA</div>
+      <textarea class="text-input" id="modal-edit-feedback" placeholder="Ej: El hook es muy genérico, hacelo más específico para coaches. El CTA necesita un entregable concreto..." style="min-height:60px;"></textarea>
+      <button class="gen-btn" style="margin-top:8px; font-size:13px; padding:10px;" id="btn-modal-edit" onclick="editarModalConIA()">✨ Aplicar cambios</button>
+    </div>
+
+    <div class="action-row" style="margin-top:16px;">
+      <button class="copy-all-btn" onclick="copyModalScript()">📋 Copiar</button>
+      <button class="copy-all-btn" onclick="addModalToCalendar()">📅 Calendario</button>
+      <button class="copy-all-btn" style="color:#f87171; border-color:rgba(248,113,113,0.3);" onclick="borrarScriptDesdeModal()">🗑 Borrar</button>
     </div>
   </div>
 </div>
@@ -2442,6 +2460,9 @@ function renderScript() {
   } else {
     document.getElementById('section-prueba').style.display = 'block';
   }
+  // Show edit panel
+  const editPanel = document.getElementById('edit-ia-panel');
+  if(editPanel) editPanel.style.display = 'block';
 }
 
 function selectHook(idx, el) {
@@ -2550,6 +2571,7 @@ function renderHistorial(filter = '') {
             <span class="tag ${tipoColors[s.tipo]||'tag-green'}" style="font-size:10px;">${s.tipo}</span>
           </div>
         </div>
+        <button onclick="event.stopPropagation(); borrarScript(${s.id})" style="background:transparent; border:1px solid rgba(248,113,113,0.3); border-radius:8px; color:#f87171; cursor:pointer; padding:4px 10px; font-size:11px; white-space:nowrap; flex-shrink:0;">🗑 Borrar</button>
       </div>
       <div class="script-card-meta">${new Date(s.date).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'})} · ${s.nicho||'Sin nicho'}</div>
       <div class="script-card-preview">${s.script?.hooks?.[0]?.verbal || 'Sin hook generado'}</div>
@@ -3453,7 +3475,10 @@ function renderHistoriasResult(data) {
           <div style="font-family:'Syne',sans-serif; font-size:18px; font-weight:700;">${data.titulo}</div>
           <div class="text-sm">${data.total} historias</div>
         </div>
-        <button class="copy-all-btn" onclick="copiarHistorias()">📋 Copiar todo</button>
+        <div style="display:flex; gap:8px;">
+          <button class="copy-all-btn" onclick="copiarHistorias()">📋 Copiar</button>
+          <button class="copy-all-btn" onclick="nuevaHistoria()" style="color:var(--accent); border-color:rgba(232,255,71,0.3);">✦ Nueva</button>
+        </div>
       </div>
       <div style="display:flex; flex-direction:column; gap:12px;" id="historias-cards">
         ${data.historias.map(h => `
@@ -3474,6 +3499,14 @@ function renderHistoriasResult(data) {
       <div style="margin-top:16px; padding:14px 16px; background:rgba(232,255,71,0.06); border:1px solid rgba(232,255,71,0.2); border-radius:var(--radius-sm);">
         <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:6px;">CTA Final</div>
         <div style="font-size:14px; color:var(--text);">${data.cta_final}</div>
+      </div>
+
+      <!-- EDITAR CON IA -->
+      <div style="margin-top:16px; background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); margin-bottom:8px;">✏️ Editar con IA</div>
+        <div style="font-size:12px; color:var(--text2); margin-bottom:8px;">Decile qué cambiar y la IA reescribe la secuencia.</div>
+        <textarea class="text-input" id="hist-edit-feedback" placeholder="Ej: La historia 2 es muy larga, acortala. El CTA final tiene que mencionar que comenten una palabra. Agregá una historia de encuesta al final..." style="min-height:60px;"></textarea>
+        <button class="gen-btn" style="margin-top:8px; font-size:13px; padding:10px;" id="btn-hist-edit" onclick="editarHistoriasConIA()">✨ Aplicar cambios</button>
       </div>
     </div>
   `;
@@ -3587,20 +3620,23 @@ function renderAdResult(data) {
     <div class="card">
       <div class="flex-between" style="margin-bottom:20px;">
         <div class="section-label">Guión generado</div>
-        <button class="copy-all-btn" onclick="copiarAd()">📋 Copiar todo</button>
+        <div style="display:flex; gap:8px;">
+          <button class="copy-all-btn" onclick="copiarAd()">📋 Copiar</button>
+          <button class="copy-all-btn" onclick="nuevoAd()" style="color:var(--accent); border-color:rgba(232,255,71,0.3);">✦ Nuevo</button>
+        </div>
       </div>
       <div style="display:flex; flex-direction:column; gap:12px;">
         <div class="script-section">
-          <div class="script-section-header"><div class="script-section-label">⚡ Hook (primeros 3 seg)</div><button class="copy-btn" onclick="navigator.clipboard.writeText('${data.hook.replace(/'/g,"\\'")}'); showToast('Copiado ✓')">Copiar</button></div>
-          <div class="script-section-body hook" style="font-size:16px; font-weight:600;">${data.hook}</div>
+          <div class="script-section-header"><div class="script-section-label">⚡ Hook (primeros 3 seg)</div><button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ad-hook-body').textContent); showToast('Copiado ✓')">Copiar</button></div>
+          <div class="script-section-body hook" style="font-size:16px; font-weight:600;" id="ad-hook-body">${data.hook}</div>
         </div>
         <div class="script-section">
           <div class="script-section-header"><div class="script-section-label">🎙 Desarrollo completo</div><button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ad-body').textContent); showToast('Copiado ✓')">Copiar</button></div>
           <div class="script-section-body problema" id="ad-body">${data.desarrollo}</div>
         </div>
         <div class="script-section">
-          <div class="script-section-header"><div class="script-section-label">📣 CTA</div></div>
-          <div class="script-section-body cta">${data.cta}</div>
+          <div class="script-section-header"><div class="script-section-label">📣 CTA</div><button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ad-cta-body').textContent); showToast('Copiado ✓')">Copiar</button></div>
+          <div class="script-section-body cta" id="ad-cta-body">${data.cta}</div>
         </div>
         <div class="script-section">
           <div class="script-section-header"><div class="script-section-label">📝 Textos en pantalla</div></div>
@@ -3613,6 +3649,14 @@ function renderAdResult(data) {
           <div class="script-section-body produccion">${data.notas}</div>
         </div>
       </div>
+
+      <!-- EDITAR CON IA -->
+      <div style="margin-top:16px; background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px;">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); margin-bottom:8px;">✏️ Editar con IA</div>
+        <div style="font-size:12px; color:var(--text2); margin-bottom:8px;">Decile exactamente qué cambiar y la IA lo aplica.</div>
+        <textarea class="text-input" id="ad-edit-feedback" placeholder="Ej: El hook es muy largo, máximo 2 oraciones. El CTA tiene que ser más específico, que mencione agendar una llamada. Hacé el desarrollo más urgente..." style="min-height:60px;"></textarea>
+        <button class="gen-btn" style="margin-top:8px; font-size:13px; padding:10px;" id="btn-ad-edit" onclick="editarAdConIA()">✨ Aplicar cambios</button>
+      </div>
     </div>
   `;
   result._data = data;
@@ -3624,6 +3668,132 @@ function copiarAd() {
   const d = result._data;
   navigator.clipboard.writeText(`HOOK\n${d.hook}\n\nDESARROLLO\n${d.desarrollo}\n\nCTA\n${d.cta}\n\nTEXTOS EN PANTALLA\n${d.texto_pantalla.join(' | ')}\n\nPRODUCCIÓN\n${d.notas}`);
   showToast('Ad copiado ✓');
+}
+
+function nuevaHistoria() {
+  // Reset form
+  histState.tipo = null; histState.objetivo = null;
+  document.querySelectorAll('#page-historias .option-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('hist-tema').value = '';
+  document.getElementById('historias-result').style.display = 'none';
+  document.getElementById('historias-result').innerHTML = '';
+  document.getElementById('btn-gen-historias').disabled = false;
+  document.getElementById('btn-gen-historias').textContent = '✨ Generar secuencia de historias';
+  showToast('Listo para crear nueva secuencia ✓', '✦');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nuevoAd() {
+  // Reset form
+  adState.tipo = null; adState.duracion = '30'; adState.destino = null;
+  document.querySelectorAll('#page-ads .option-btn').forEach(b => b.classList.remove('selected'));
+  // Re-select default duration
+  document.querySelectorAll('#page-ads .option-btn').forEach(b => { if(b.textContent.trim() === '30 seg') b.classList.add('selected'); });
+  document.getElementById('ad-oferta').value = '';
+  document.getElementById('ad-avatar').value = '';
+  document.getElementById('ad-testimonio').value = '';
+  document.getElementById('ads-result').style.display = 'none';
+  document.getElementById('ads-result').innerHTML = '';
+  document.getElementById('btn-gen-ads').disabled = false;
+  document.getElementById('btn-gen-ads').textContent = '✨ Generar guión de ad';
+  showToast('Listo para crear nuevo ad ✓', '✦');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function editarHistoriasConIA() {
+  const feedback = document.getElementById('hist-edit-feedback').value.trim();
+  if(!feedback) { showToast('Escribí qué querés cambiar', '⚠️'); return; }
+  const result = document.getElementById('historias-result');
+  if(!result._data) return;
+
+  const btn = document.getElementById('btn-hist-edit');
+  btn.disabled = true; btn.textContent = '⏳ Aplicando...';
+
+  const d = result._data;
+  const resumen = d.historias.map(h => `Historia ${h.num} (${h.tipo_media}): "${h.texto_pantalla}" — ${h.descripcion.substring(0,60)}...`).join('\n');
+
+  const prompt = `Tenés esta secuencia de historias de Instagram y el creador pide cambios específicos. Aplicá solo lo que pide sin cambiar el resto.
+
+SECUENCIA ACTUAL:
+Título: ${d.titulo}
+${resumen}
+CTA Final: ${d.cta_final}
+
+FEEDBACK (aplicar exactamente):
+${feedback}
+
+Respondé SOLO en JSON con la misma estructura:
+{
+  "titulo": "...",
+  "total": número,
+  "historias": [{"num":1,"tipo_media":"...","texto_pantalla":"...","descripcion":"...","sticker":"..."}],
+  "cta_final": "..."
+}`;
+
+  try {
+    const response = await fetch('https://curly-brook-7e7b.mktsocialink.workers.dev/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await response.json();
+    if(data.error) throw new Error(data.error.message);
+    const text = data.content?.[0]?.text || '';
+    const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderHistoriasResult(parsed);
+    showToast('Secuencia actualizada ✓ ✨');
+  } catch(e) {
+    showToast('Error: ' + e.message, '⚠️');
+  }
+  btn.disabled = false; btn.textContent = '✨ Aplicar cambios';
+}
+
+async function editarAdConIA() {
+  const feedback = document.getElementById('ad-edit-feedback').value.trim();
+  if(!feedback) { showToast('Escribí qué querés cambiar', '⚠️'); return; }
+  const result = document.getElementById('ads-result');
+  if(!result._data) return;
+
+  const btn = document.getElementById('btn-ad-edit');
+  btn.disabled = true; btn.textContent = '⏳ Aplicando...';
+
+  const d = result._data;
+  const prompt = `Tenés este guión de ad y el creador pide cambios específicos. Aplicá exactamente lo que pide.
+
+GUIÓN ACTUAL:
+Hook: ${d.hook}
+Desarrollo: ${d.desarrollo}
+CTA: ${d.cta}
+Textos en pantalla: ${d.texto_pantalla.join(' | ')}
+
+FEEDBACK (aplicar exactamente):
+${feedback}
+
+Respondé SOLO en JSON con la misma estructura:
+{
+  "hook": "...",
+  "desarrollo": "...",
+  "cta": "...",
+  "texto_pantalla": ["...", "...", "..."],
+  "notas": "${d.notas||''}"
+}`;
+
+  try {
+    const response = await fetch('https://curly-brook-7e7b.mktsocialink.workers.dev/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await response.json();
+    if(data.error) throw new Error(data.error.message);
+    const text = data.content?.[0]?.text || '';
+    const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderAdResult(parsed);
+    showToast('Ad actualizado ✓ ✨');
+  } catch(e) {
+    showToast('Error: ' + e.message, '⚠️');
+  }
+  btn.disabled = false; btn.textContent = '✨ Aplicar cambios';
 }
 
 // ===================== VARIACIONES =====================
@@ -4019,6 +4189,183 @@ function renderAdAnalytics() {
       </div>`:''}
     </div>`:''}
   `;
+}
+
+// ===================== NUEVO GUIÓN =====================
+function nuevoGuion() {
+  // Reset briefing
+  state.briefing = { formato: null, tipo: null, angulo: '', nicho: '', objetivo: null, plataforma: null, testimonio: true, testimonioTexto: '' };
+  state.script = { hooks: [], selectedHook: 0, problema: '', solucion: '', prueba: '', cta: '', produccion: '' };
+  state.currentStep = 1;
+
+  // Reset UI steps
+  [1,2,3,4].forEach(i => document.getElementById('step-' + i).style.display = i === 1 ? 'block' : 'none');
+  [1,2,3,4].forEach(i => {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active','done');
+    if(i === 1) dot.classList.add('active');
+  });
+
+  // Reset all option buttons
+  document.querySelectorAll('#page-generator .option-btn').forEach(b => b.classList.remove('selected','selected-purple','selected-orange'));
+
+  // Reset text inputs
+  const anguloIn = document.getElementById('angulo-input');
+  const nichoIn = document.getElementById('nicho-input');
+  const feedbackIn = document.getElementById('edit-feedback');
+  if(anguloIn) anguloIn.value = '';
+  if(nichoIn) nichoIn.value = '';
+  if(feedbackIn) feedbackIn.value = '';
+
+  // Reset testimony
+  toggleTestimonio(true, document.getElementById('testimonio-si'));
+
+  // Reset output
+  document.getElementById('output-empty').style.display = 'flex';
+  document.getElementById('output-empty').innerHTML = `<div class="empty-icon">✍️</div><div class="empty-title">Completa el briefing para generar tu guión</div><div class="text-sm">Responde las 4 preguntas y la IA creará un guión profesional listo para grabar</div>`;
+  document.getElementById('output-loading').style.display = 'none';
+  document.getElementById('output-result').style.display = 'none';
+  document.getElementById('edit-ia-panel').style.display = 'none';
+
+  // Reset nav buttons
+  document.getElementById('btn-back').style.display = 'none';
+  document.getElementById('btn-next').textContent = 'Siguiente →';
+  document.getElementById('viral-check').style.display = 'none';
+
+  showToast('Listo para crear un nuevo guión ✓', '✦');
+}
+
+// ===================== BORRAR GUIÓN =====================
+function borrarScript(id) {
+  if(!confirm('¿Borrar este guión? Esta acción no se puede deshacer.')) return;
+  state.scripts = state.scripts.filter(s => s.id !== id);
+  localStorage.setItem('sm_scripts', JSON.stringify(state.scripts));
+  updateCalendarSelect();
+  updateDashboard();
+  renderHistorial();
+  showToast('Guión borrado');
+}
+
+function borrarScriptDesdeModal() {
+  if(!state.activeModal) return;
+  const id = state.activeModal.id;
+  closeModal();
+  borrarScript(id);
+}
+
+// ===================== EDITAR CON IA =====================
+async function editarConIA() {
+  const feedback = document.getElementById('edit-feedback').value.trim();
+  if(!feedback) { showToast('Escribí qué querés mejorar', '⚠️'); return; }
+  const s = state.script;
+  if(!s.hooks?.length) { showToast('Primero generá un guión', '⚠️'); return; }
+
+  const btn = document.getElementById('btn-edit-ia');
+  btn.disabled = true; btn.textContent = '⏳ Aplicando...';
+
+  const hook = s.hooks[s.selectedHook || 0];
+  const prompt = `Tenés este guión para redes sociales y el creador te pide cambios específicos. Aplicá exactamente lo que pide, sin cambiar lo que NO mencionó.
+
+GUIÓN ACTUAL:
+Hook verbal: "${hook?.verbal}"
+Hook textual: "${hook?.textual}"
+Problema: ${s.problema}
+Solución: ${s.solucion}
+Prueba social: ${s.prueba}
+CTA: ${s.cta}
+
+FEEDBACK DEL CREADOR (aplicar exactamente esto):
+${feedback}
+
+Devolvé el guión corregido con los cambios aplicados. Si el feedback pide cambiar el hook, generá 3 nuevas opciones. Si pide cambiar otra sección, mejorala según lo pedido.
+
+Respondé SOLO en JSON con la misma estructura:
+{
+  "hooks": [{"num":1,"tipo":"...","verbal":"...","textual":"..."},{"num":2,"tipo":"...","verbal":"...","textual":"..."},{"num":3,"tipo":"...","verbal":"...","textual":"..."}],
+  "problema": "...",
+  "solucion": "...",
+  "prueba": "${s.prueba||''}",
+  "cta": "...",
+  "produccion": "${s.produccion||''}"
+}`;
+
+  try {
+    const response = await fetch('https://curly-brook-7e7b.mktsocialink.workers.dev/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await response.json();
+    if(data.error) throw new Error(data.error.message);
+    const text = data.content?.[0]?.text || '';
+    const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+    state.script = { ...parsed, selectedHook: 0 };
+    renderScript();
+    document.getElementById('edit-feedback').value = '';
+    showToast('Guión actualizado ✓ ✨');
+  } catch(e) {
+    showToast('Error: ' + e.message, '⚠️');
+  }
+  btn.disabled = false; btn.textContent = '✨ Aplicar cambios';
+}
+
+async function editarModalConIA() {
+  const feedback = document.getElementById('modal-edit-feedback').value.trim();
+  if(!feedback) { showToast('Escribí qué querés mejorar', '⚠️'); return; }
+  if(!state.activeModal) return;
+
+  const btn = document.getElementById('btn-modal-edit');
+  btn.disabled = true; btn.textContent = '⏳ Aplicando...';
+
+  const s = state.activeModal.script;
+  const hook = s?.hooks?.[0];
+  const prompt = `Tenés este guión y el creador pide cambios específicos. Aplicá exactamente lo que pide.
+
+GUIÓN ACTUAL:
+Hook: "${hook?.verbal}"
+Problema: ${s?.problema}
+Solución: ${s?.solucion}
+CTA: ${s?.cta}
+
+FEEDBACK: ${feedback}
+
+Respondé SOLO en JSON:
+{
+  "hooks": [{"num":1,"tipo":"...","verbal":"...","textual":"..."},{"num":2,"tipo":"...","verbal":"...","textual":"..."},{"num":3,"tipo":"...","verbal":"...","textual":"..."}],
+  "problema": "...",
+  "solucion": "...",
+  "prueba": "${s?.prueba||''}",
+  "cta": "...",
+  "produccion": "${s?.produccion||''}"
+}`;
+
+  try {
+    const response = await fetch('https://curly-brook-7e7b.mktsocialink.workers.dev/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await response.json();
+    if(data.error) throw new Error(data.error.message);
+    const text = data.content?.[0]?.text || '';
+    const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+
+    // Save updated script
+    const idx = state.scripts.findIndex(s => s.id === state.activeModal.id);
+    if(idx >= 0) {
+      state.scripts[idx].script = { ...parsed, selectedHook: 0 };
+      localStorage.setItem('sm_scripts', JSON.stringify(state.scripts));
+      state.activeModal = state.scripts[idx];
+    }
+
+    // Re-render modal content
+    openScriptModal(state.activeModal.id);
+    document.getElementById('modal-edit-feedback').value = '';
+    showToast('Guión actualizado ✓ ✨');
+  } catch(e) {
+    showToast('Error: ' + e.message, '⚠️');
+  }
+  btn.disabled = false; btn.textContent = '✨ Aplicar cambios';
 }
 
 // ===================== RETENCIÓN =====================

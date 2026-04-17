@@ -1377,11 +1377,43 @@ input[type="range"]::-webkit-slider-thumb {
         <div id="step-1">
           <div class="field-label">Formato <span class="required">*</span></div>
           <div class="options-grid">
-            <div class="option-btn" onclick="selectOption('formato','reel-camara',this)">🎥 Reel a cámara</div>
-            <div class="option-btn" onclick="selectOption('formato','reel-qa',this)">❓ Reel Q&A</div>
-            <div class="option-btn" onclick="selectOption('formato','reel-pantalla',this)">📱 Pantalla dividida</div>
-            <div class="option-btn" onclick="selectOption('formato','carrusel',this)">📑 Carrusel</div>
-            <div class="option-btn" style="grid-column:1/-1;" onclick="selectOption('formato','reel-ranking',this)">🏆 Reel Ranking / Top</div>
+            <div class="option-btn" onclick="selectFormato('reel-camara',this)">🎥 Reel a cámara</div>
+            <div class="option-btn" onclick="selectFormato('reel-qa',this)">❓ Reel Q&A</div>
+            <div class="option-btn" onclick="selectFormato('reel-pantalla',this)">📱 Pantalla dividida</div>
+            <div class="option-btn" onclick="selectFormato('carrusel',this)">📑 Carrusel</div>
+            <div class="option-btn" onclick="selectFormato('reel-ranking',this)">🏆 Reel Ranking / Top</div>
+            <div class="option-btn" onclick="selectFormato('youtube',this)">▶️ YouTube (video largo)</div>
+          </div>
+
+          <!-- Carrusel: cantidad de slides -->
+          <div id="carrusel-config" style="display:none; margin-top:14px; padding:14px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+            <div class="field-label">¿Cuántos slides querés? <span class="required">*</span></div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <div class="option-btn" onclick="selectSlides(5,this)">5 slides</div>
+              <div class="option-btn" onclick="selectSlides(7,this)">7 slides</div>
+              <div class="option-btn selected" onclick="selectSlides(10,this)">10 slides</div>
+              <div class="option-btn" onclick="selectSlides(15,this)">15 slides</div>
+            </div>
+            <div style="font-size:11px; color:var(--text3); margin-top:8px;">Incluye slide de portada y slide de CTA. Los slides de contenido son el total menos 2.</div>
+          </div>
+
+          <!-- YouTube: duración -->
+          <div id="youtube-config" style="display:none; margin-top:14px; padding:14px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+            <div class="field-label">¿Cuántos minutos querés? <span class="required">*</span></div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <div class="option-btn" onclick="selectYTDuracion(5,this)">5 min</div>
+              <div class="option-btn selected" onclick="selectYTDuracion(10,this)">10 min</div>
+              <div class="option-btn" onclick="selectYTDuracion(15,this)">15 min</div>
+              <div class="option-btn" onclick="selectYTDuracion(20,this)">20 min</div>
+            </div>
+            <div class="field-label mt16">Estilo de video</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <div class="option-btn selected" id="yt-estilo-educativo" onclick="selectYTEstilo('educativo',this)">📚 Educativo / Tutorial</div>
+              <div class="option-btn" id="yt-estilo-historia" onclick="selectYTEstilo('historia',this)">🎬 Historia / Storytelling</div>
+              <div class="option-btn" id="yt-estilo-lista" onclick="selectYTEstilo('lista',this)">📋 Lista / Ranking</div>
+              <div class="option-btn" id="yt-estilo-caso" onclick="selectYTEstilo('caso',this)">⭐ Caso de estudio</div>
+            </div>
+            <div style="font-size:11px; color:var(--text3); margin-top:8px;">Para YouTube el guión incluye intro, secciones con timestamps, momentos de retención y outro con CTA.</div>
           </div>
         </div>
 
@@ -1410,11 +1442,19 @@ input[type="range"]::-webkit-slider-thumb {
         <div id="step-4" style="display:none;">
           <div class="field-label">Objetivo principal <span class="required">*</span></div>
           <div style="display:flex; flex-direction:column; gap:8px;">
-            <div class="option-btn" onclick="selectOption('objetivo','viralidad',this)">🚀 Viralidad — alcance y nuevos seguidores</div>
-            <div class="option-btn" onclick="selectOption('objetivo','autoridad',this)">🏆 Autoridad — posicionamiento experto</div>
-            <div class="option-btn" onclick="selectOption('objetivo','ventas',this)">💰 Ventas — convertir en clientes</div>
-            <div class="option-btn" onclick="selectOption('objetivo','comunidad',this)">❤️ Comunidad — engagement y fidelización</div>
+            <div class="option-btn" onclick="selectObjetivo('viralidad',this)">🚀 Viralidad — alcance y nuevos seguidores</div>
+            <div class="option-btn" onclick="selectObjetivo('autoridad',this)">🏆 Autoridad — posicionamiento experto</div>
+            <div class="option-btn" onclick="selectObjetivo('ventas',this)">💰 Ventas — convertir en clientes</div>
+            <div class="option-btn" onclick="selectObjetivo('comunidad',this)">❤️ Comunidad — engagement y fidelización</div>
           </div>
+
+          <!-- ESTRUCTURA DINÁMICA según objetivo -->
+          <div id="estructura-selector" style="display:none; margin-top:16px;">
+            <div class="field-label">Estructura del video <span style="font-size:10px; color:var(--text3);">(sugeridas según tu objetivo)</span></div>
+            <div style="font-size:11px; color:var(--text3); margin-bottom:8px;">Elegí la estructura narrativa. Cada una genera retención y conversión de forma diferente.</div>
+            <div id="estructura-options" style="display:flex; flex-direction:column; gap:6px;"></div>
+          </div>
+
           <div class="field-label mt16">Plataforma</div>
           <div class="options-grid">
             <div class="option-btn" onclick="selectOption('plataforma','instagram',this)">Instagram</div>
@@ -2124,7 +2164,7 @@ input[type="range"]::-webkit-slider-thumb {
 const state = {
   currentPage: 'dashboard',
   currentStep: 1,
-  briefing: { formato: null, tipo: null, angulo: '', nicho: '', objetivo: null, plataforma: null, testimonio: true, testimonioTexto: '' },
+  briefing: { formato: null, tipo: null, angulo: '', nicho: '', objetivo: null, plataforma: null, testimonio: true, testimonioTexto: '', slides: 10, ytDuracion: 10, ytEstilo: 'educativo', estructura: null },
   script: { hooks: [], selectedHook: 0, problema: '', solucion: '', prueba: '', cta: '', produccion: '' },
   scripts: JSON.parse(localStorage.getItem('sm_scripts') || '[]'),
   calendar: JSON.parse(localStorage.getItem('sm_calendar') || '[]'),
@@ -2173,6 +2213,107 @@ function selectOption(field, value, btn) {
   btn.classList.add(colorMap[field] || 'selected');
   state.briefing[field] = value;
   updateViralCheck();
+}
+
+function selectFormato(formato, btn) {
+  // Deselect all format buttons
+  document.querySelectorAll('#step-1 .options-grid .option-btn').forEach(b => b.classList.remove('selected','selected-purple','selected-orange'));
+  btn.classList.add('selected');
+  state.briefing.formato = formato;
+  // Show/hide config panels
+  document.getElementById('carrusel-config').style.display = formato === 'carrusel' ? 'block' : 'none';
+  document.getElementById('youtube-config').style.display = formato === 'youtube' ? 'block' : 'none';
+  updateViralCheck();
+}
+
+function selectSlides(n, btn) {
+  document.querySelectorAll('#carrusel-config .option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.briefing.slides = n;
+}
+
+function selectYTDuracion(n, btn) {
+  document.querySelectorAll('#youtube-config .option-btn:not([id^="yt-estilo"])').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.briefing.ytDuracion = n;
+}
+
+function selectYTEstilo(estilo, btn) {
+  ['educativo','historia','lista','caso'].forEach(e => {
+    const el = document.getElementById('yt-estilo-' + e);
+    if(el) el.classList.remove('selected');
+  });
+  btn.classList.add('selected');
+  state.briefing.ytEstilo = estilo;
+}
+
+// ===================== ESTRUCTURAS DE GUIÓN =====================
+const ESTRUCTURAS = {
+  viralidad: [
+    { id: 'v1', nombre: '🔥 Video 100% Viral', desc: 'Gancho negativo → Oportunidad → Pasos accionables → Promesa → CTA', estructura: 'Gancho negativo (algo que la audiencia esté haciendo mal) → Oportunidad (la alternativa correcta) → Pasos accionables (máx 3, concretos) → Promesa de resultado → CTA de engagement (guardar, compartir)' },
+    { id: 'v2', nombre: '🤯 Vacío de Información', desc: 'Gancho vacío → Pico de interés → Valor inmediato → Paso a paso → CTA', estructura: 'Gancho que crea vacío de información (algo que no saben pero deberían) → Pico de interés que aumenta la curiosidad → Valor inmediato concreto → Desarrollo paso a paso simple → CTA de engagement' },
+    { id: 'v3', nombre: '🎯 How-To Filtrante', desc: 'Gancho filtrante → Guía paso a paso → CTA de engagement', estructura: 'Gancho filtrante que identifica al avatar exacto en la primera oración → Guía paso a paso simple y corta (máx 3 pasos) → CTA de engagement (guardar, seguir para más)' },
+    { id: 'v4', nombre: '⚔️ Desafío Contracorriente', desc: 'Frase provocadora → Por qué la idea común está mal → Prueba real → Nueva perspectiva → CTA', estructura: 'Frase que rompe una creencia popular (polémica pero con fundamento) → Explicación de por qué la idea común está equivocada → Prueba o caso real que lo valida → Nueva perspectiva más útil → CTA pregunta para generar debate' },
+    { id: 'v5', nombre: '💥 El Momento WTF', desc: 'Gancho impactante → Planteamiento → Escalada → Resolución inesperada → CTA', estructura: 'Gancho que genera confusión o sorpresa extrema → Planteamiento breve de la situación → Escalada: se complica el problema o aumenta la tensión → Resolución inesperada con giro sorprendente → CTA pregunta' },
+    { id: 'v6', nombre: '🔄 El Efecto Boomerang', desc: 'Resultado impactante → Primer intento fallido → Segundo fallido → Revelación → CTA', estructura: 'Gancho mostrando el resultado ANTES de explicar cómo se logró → Primer intento fallido (error inicial) → Segundo intento fallido que empeora → Revelación final de la clave del éxito volviendo al momento inicial → CTA' },
+  ],
+  autoridad: [
+    { id: 'a1', nombre: '📚 La Regla de 3', desc: 'Gancho con meta → Prueba social → 3 tips accionables → Promesa → CTA', estructura: 'Gancho con deseo o dolor que contenga la META a la que quieren llegar → Prueba social (resultado propio o de cliente) → 3 tips accionables concretos → Promesa de resultado si aplican lo anterior → CTA suave (seguir, guardar)' },
+    { id: 'a2', nombre: '🎭 La Paradoja Personal', desc: 'Declaración contradictoria → Contexto → Revelación → Explicación → CTA', estructura: 'Declaración que desafía la lógica inicial (algo que parece contradictorio) → Contexto personal: cómo creías lo contrario → Momento de revelación: qué cambió tu opinión → Explicación de por qué lo que antes parecía ilógico tiene sentido → CTA pregunta para generar conversación' },
+    { id: 'a3', nombre: '🪞 El Espejo', desc: 'Pregunta que todos sienten → Validación → Causa → Reflexión → CTA', estructura: 'Gancho: plantear pregunta o afirmación con la que TODOS se identificarán → Validación: confirmar que es una sensación real y común → Causa: mostrar por qué sucede esto → Reflexión: dar perspectiva diferente o consejo útil → CTA: preguntar si se han sentido igual' },
+    { id: 'a4', nombre: '🎬 La Historia Inesperada', desc: 'Historia cotidiana intrigante → Desarrollo → Giro inesperado → Lección → CTA', estructura: 'Gancho: historia cotidiana con frase intrigante → Desarrollo con detalles que construyen la historia → Giro: elemento inesperado que cambia la perspectiva → Lección final clara y aplicable → CTA invitar a compartir experiencia similar' },
+    { id: 'a5', nombre: '⚡ Gancho Controversial', desc: 'Gancho polémico → Razón lógica → Prueba social → CTA', estructura: 'Gancho controversial que genere reacción inmediata → Una razón lógica y clara de por qué pensás eso (no atacar, explicar) → Prueba social o dato que lo respalde → CTA invitando a opinar o debatir' },
+    { id: 'a6', nombre: '💬 Respuesta a Comentario', desc: 'Comentario polémico → Prueba social → Opinión aplicable → CTA', estructura: 'Mostrar un comentario polémico o pregunta frecuente del nicho (real o ficticio) → Prueba social propia que da autoridad para responder → Dar opinión junto a algo directamente aplicable → CTA invitando a dejar más preguntas' },
+  ],
+  ventas: [
+    { id: 'ven1', nombre: '🏆 Construcción de Autoridad para Venta', desc: 'Gancho con deseo → Prueba social → Tips accionables → Promesa → CTA', estructura: 'Gancho que mencione un deseo o meta del avatar → Prueba social de cliente real (nombre + resultado concreto) → Tips accionables fáciles de implementar → Promesa de cambio si aplican el método → CTA directo a consulta o programa' },
+    { id: 'ven2', nombre: '🎯 Pitch de Venta Perfecto', desc: 'Problema → Villano → Solución/Héroe → Pasos prácticos → Promesa → CTA', estructura: 'Problema agitado (crear el villano: qué les está causando daño) → Oportunidad (presentar el héroe: la solución que los salva) → Pasos prácticos de cómo funciona → Promesa concreta del resultado → CTA directo' },
+    { id: 'ven3', nombre: '📖 Historias que Venden', desc: 'Gancho emocional → Punto A (problemática) → Punto de quiebre → Solución → Lección → CTA', estructura: 'Gancho que resuma lo más fuerte de la historia (emoción o resultado) → Qué problemática tenías/tenía el cliente al inicio (Punto A) → Qué te hizo darte cuenta del problema (punto de quiebre) → Qué lo resolvió (tu servicio/método) → Qué lección dejó → CTA a consulta o programa' },
+    { id: 'ven4', nombre: '❌ Declaración Falsa', desc: 'Creencia limitante → Oportunidad → Prueba social → Refutación → Caso de éxito → CTA', estructura: 'Presentar creencia limitante del nicho como si fuera verdad (gancho) → Oportunidad: explicar por qué es una mentira → Prueba social de cliente que pensaba lo mismo y cambió → Refutar la creencia con pasos accionables claros → Caso de éxito concreto → CTA' },
+    { id: 'ven5', nombre: '👁 El Problema Invisible', desc: 'Gancho que hace dudar → Problema que no sabían que tenían → Síntomas/evidencia → Solución → CTA', estructura: 'Gancho: afirmación que hace dudar al espectador sobre su propia situación → Problema Invisible: explicar por qué este problema los afecta sin que se den cuenta → Evidencia y síntomas que demuestran que el problema es real → Solución (tu servicio/método) presentada como la salida → CTA directo' },
+    { id: 'ven6', nombre: '📈 La Escalera de Autoridad', desc: 'Gancho antes/después → Punto de partida → Primer cambio → Llegada al éxito → CTA', estructura: 'Gancho antes y después en una frase impactante → Primer Paso: punto de partida con dificultades reales → Segundo Paso: primer cambio o aprendizaje que mejoró la situación → Tercer Paso: cómo llegó al éxito aplicando el método → Resultado Final con números → CTA ofreciendo replicar el proceso' },
+  ],
+  comunidad: [
+    { id: 'com1', nombre: '🦸 Viaje del Héroe', desc: 'Gancho resumen → Inicio difícil → Conflicto → Transformación → CTA reflexión', estructura: 'Gancho resumen de la historia completa (spoiler del resultado) → Inicio: el punto de partida antes del cambio con dificultades reales → Conflicto: el reto o fracaso que puso todo en riesgo → Transformación: el aprendizaje o acción que cambió la historia → CTA invitando a reflexionar o compartir' },
+    { id: 'com2', nombre: '⬇️ Caída Doble', desc: 'Gancho negativo → Problema 1 → Intento fallido → Problema 2 peor → Solución definitiva → CTA', estructura: 'Gancho negativo que genera intriga inmediata → Primer problema presentado con contexto → Primer intento de solución que falla → Segundo problema peor que complica todo → Solución definitiva que resuelve ambos → CTA invitando a comentar si se identifican' },
+    { id: 'com3', nombre: '🦋 El Efecto Mariposa', desc: 'Evento pequeño → Reacción en cadena → Punto de cambio → Impacto final → CTA', estructura: 'Gancho: introducir un evento pequeño y aparentemente irrelevante → Reacción en cadena: cómo se desarrolló sin que nadie lo notara → Punto de cambio: momento en que se vuelve crucial → Impacto final: cómo cambió todo → CTA invitando a la audiencia a debatir' },
+    { id: 'com4', nombre: '🔁 Reacción a Video/Comentario', desc: 'Reacción → Señalar problema → Solución práctica → Invitar a más preguntas', estructura: 'Responder o reaccionar a un video/comentario de otro creador que generó debate → Señalar el problema o la parte incorrecta del argumento → Presentar solución práctica con insights propios → Invitar a que dejen más dudas o sugerencias para generar conversación' },
+  ]
+};
+
+function selectObjetivo(objetivo, btn) {
+  // Deselect all objetivo buttons
+  btn.closest('div').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected','selected-purple','selected-orange'));
+  btn.classList.add('selected-orange');
+  state.briefing.objetivo = objetivo;
+  state.briefing.estructura = null;
+  updateViralCheck();
+
+  // Show structure selector
+  const sel = document.getElementById('estructura-selector');
+  const opts = document.getElementById('estructura-options');
+  if(!sel || !opts) return;
+
+  const estructuras = ESTRUCTURAS[objetivo] || [];
+  if(!estructuras.length) { sel.style.display = 'none'; return; }
+
+  sel.style.display = 'block';
+  opts.innerHTML = estructuras.map(e => `
+    <div class="option-btn" id="est-${e.id}" onclick="selectEstructura('${e.id}', this)" style="text-align:left; padding:12px 14px;">
+      <div style="font-weight:700; font-size:13px; margin-bottom:3px;">${e.nombre}</div>
+      <div style="font-size:11px; color:var(--text3); font-weight:400;">${e.desc}</div>
+    </div>
+  `).join('');
+
+  // Auto-select first
+  const firstBtn = opts.querySelector('.option-btn');
+  if(firstBtn) selectEstructura(estructuras[0].id, firstBtn);
+}
+
+function selectEstructura(id, btn) {
+  document.querySelectorAll('#estructura-options .option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.briefing.estructura = id;
 }
 
 function toggleTestimonio(val, btn) {
@@ -2268,8 +2409,9 @@ async function generateScript() {
     'reel-camara': 'Reel hablando a cámara',
     'reel-qa': 'Reel Q&A (pregunta y respuesta)',
     'reel-pantalla': 'Reel pantalla dividida',
-    'carrusel': 'Carrusel',
-    'reel-ranking': 'Reel de ranking/top'
+    'carrusel': `Carrusel de ${b.slides} slides`,
+    'reel-ranking': 'Reel de ranking/top',
+    'youtube': `Video de YouTube de ${b.ytDuracion} minutos (formato largo)`
   };
   const tipoMap = {
     'problema': 'Problema (meter el dedo en la llaga, explicar POR QUÉ tienen el problema, sin dar la solución paso a paso)',
@@ -2284,6 +2426,8 @@ async function generateScript() {
     'comunidad': 'fidelizar comunidad y aumentar engagement'
   };
 
+  const estructuraSeleccionada = b.estructura ? Object.values(ESTRUCTURAS).flat().find(e => e.id === b.estructura) : null;
+
   const prompt = `Sos un experto en guionización de contenido para redes sociales. Tu trabajo es crear guiones que paren el scroll, generen autoridad y conviertan seguidores en clientes.
 
 BRIEFING:
@@ -2294,6 +2438,16 @@ BRIEFING:
 - Objetivo: ${objetivoMap[b.objetivo]}
 - Plataforma: ${b.plataforma || 'Instagram/TikTok'}
 - Prueba social: ${b.testimonio ? (b.testimonioTexto ? 'SÍ — usar este testimonio real: "' + b.testimonioTexto + '"' : 'SÍ — inventar un ejemplo creíble') : 'NO — omitir la sección de prueba social'}
+${estructuraSeleccionada ? `- Estructura narrativa elegida: ${estructuraSeleccionada.nombre}` : ''}
+
+${estructuraSeleccionada ? `═══ ESTRUCTURA OBLIGATORIA A SEGUIR ═══
+
+Nombre: ${estructuraSeleccionada.nombre}
+Secuencia exacta: ${estructuraSeleccionada.estructura}
+
+IMPORTANTE: Seguí esta estructura al pie de la letra. Cada sección del guión tiene que corresponder a uno de los pasos de la secuencia. No uses la estructura genérica de hook-problema-solución-CTA. Usá exactamente la que se indica arriba.
+
+` : ''}
 
 ═══ DURACIÓN Y RITMO ═══
 ${b.formato !== 'carrusel' ? `MÁXIMO 60 SEGUNDOS. Contá las palabras: un reel de 60 segundos tiene aproximadamente 130-150 palabras en total (hook + problema + solución + CTA). Sé conciso y directo. Cada oración tiene que tener un propósito. Si sobra algo, sacalo.` : 'Carrusel: máximo 7 palabras por slide de título, máximo 5 slides de contenido.'}
@@ -2339,7 +2493,22 @@ Si el tipo es MENTALIDAD: no pongas CTA de venta, solo invitá a opinar/debatir.
 
 NOTAS DE PRODUCCIÓN: Indicaciones técnicas específicas para ${formatoMap[b.formato]}. Encuadre, elementos en pantalla, ritmo, texto superpuesto.
 
-${b.formato === 'carrusel' ? 'CARRUSEL: Slide 1 = hook con título grande impactante. Slides 2-5 = una sola idea por slide, máx 10 palabras de título. Slide final = CTA con el recurso.' : ''}
+${b.formato === 'carrusel' ? `CARRUSEL DE ${b.slides} SLIDES:
+- Slide 1 (PORTADA): Título impactante máx 8 palabras + subtítulo. Es el hook visual — tiene que parar el scroll.
+- Slides 2 a ${b.slides - 1}: UN SOLO concepto/punto por slide. Título máx 7 palabras + 1-2 líneas de desarrollo. Cada slide tiene que tener valor por sí solo.
+- Slide ${b.slides} (CTA): Llamado a la acción claro con el entregable específico.
+IMPORTANTE: Generá el contenido de TODOS los ${b.slides} slides, no solo la estructura. Cada slide con su título y texto completo.` : ''}
+${b.formato === 'youtube' ? `VIDEO DE YOUTUBE DE ${b.ytDuracion} MINUTOS — FORMATO LARGO:
+Estilo: ${b.ytEstilo === 'educativo' ? 'Educativo/Tutorial — enseñás paso a paso' : b.ytEstilo === 'historia' ? 'Storytelling — contás una historia con lección' : b.ytEstilo === 'lista' ? 'Lista/Ranking — formato de puntos numerados' : 'Caso de estudio — mostrás un resultado real con el proceso'}
+
+ESTRUCTURA PARA ${b.ytDuracion} MINUTOS (~${b.ytDuracion * 130} palabras):
+1. INTRO (0:00-0:30): Hook de los primeros 15 segundos + promesa del video + por qué vale la pena verlo completo
+2. CONTEXTO (0:30-1:30): Por qué este tema importa, quién es el video
+3. DESARROLLO: ${b.ytDuracion <= 7 ? '2-3 secciones principales' : b.ytDuracion <= 12 ? '3-4 secciones principales' : '4-5 secciones principales'} con timestamps estimados
+4. MOMENTOS DE RETENCIÓN: En cada sección, incluí un "pattern interrupt" para mantener atención (pregunta, dato sorprendente, promesa de lo que viene)
+5. OUTRO (último minuto): Resumen de los puntos clave + CTA doble (suscribir + recurso gratuito)
+
+El guión tiene que estar escrito para ser LEÍDO EN CÁMARA. Incluí indicaciones de [PAUSA], [MOSTRAR EN PANTALLA: X], [B-ROLL: X] donde corresponda.` : ''}
 ${b.formato === 'reel-ranking' ? 'RANKING: Empezá anunciando el total ("Los 3 errores..."). Contá de menor a mayor impacto. El #1 al final, tiene que ser el más sorprendente. 30-45 segundos máximo.' : ''}
 ${b.formato === 'reel-qa' ? `Q&A: Para cada hook generá una pregunta ficticia de un seguidor real que dispara exactamente el ángulo del contenido. La pregunta tiene que sonar auténtica, específica, con un dato concreto (ej: "tengo 800 seguidores y publico todos los días pero no vendo nada, ¿qué estoy haciendo mal?"). El verbal del hook es la respuesta directa a esa pregunta en los primeros 3 segundos. Estructura: pregunta en pantalla → respuesta directa → desarrollo del problema → solución → CTA.` : ''}
 ${b.formato === 'reel-pantalla' ? `PANTALLA DIVIDIDA: Para cada hook especificá exactamente qué aparece en la pantalla izquierda (la creencia incorrecta, el error, el antes) y qué aparece en la pantalla derecha (la realidad, la solución, el después). Tiene que ser texto corto y contrastante — máx 5 palabras por lado. El contraste visual ES el gancho principal.` : ''}
@@ -2356,8 +2525,18 @@ Respondé ÚNICAMENTE en JSON válido con esta estructura:
     {"num": 2, "tipo": "Controversial", "verbal": "...", "textual": "..."${b.formato === 'reel-qa' ? ', "pregunta": "..."' : ''}${b.formato === 'reel-pantalla' ? ', "izquierda": "...", "derecha": "..."' : ''}},
     {"num": 3, "tipo": "Vacío de información", "verbal": "...", "textual": "..."${b.formato === 'reel-qa' ? ', "pregunta": "..."' : ''}${b.formato === 'reel-pantalla' ? ', "izquierda": "...", "derecha": "..."' : ''}}
   ],
-  "problema": "2-3 oraciones cortas, lenguaje conversacional",
-  "solucion": "1-2 oraciones, el qué nunca el cómo",
+  ${b.formato === 'carrusel' ? `"slides": [
+    {"num": 1, "tipo": "portada", "titulo": "título impactante máx 8 palabras", "subtitulo": "subtítulo opcional"},
+    {"num": 2, "tipo": "contenido", "titulo": "título del punto", "texto": "desarrollo del punto en 1-2 líneas"},
+    ...hasta slide ${b.slides} con "tipo": "cta"
+  ],` : ''}
+  ${b.formato === 'youtube' ? `"secciones": [
+    {"timestamp": "0:00", "titulo": "INTRO", "guion": "texto completo de la intro listo para leer en cámara"},
+    {"timestamp": "0:30", "titulo": "nombre de la sección", "guion": "texto completo..."},
+    ...
+  ],` : ''}
+  "problema": "${b.formato === 'youtube' ? 'contexto/problema del video en 2-3 oraciones' : '2-3 oraciones cortas, lenguaje conversacional'}",
+  "solucion": "${b.formato === 'youtube' ? 'promesa principal del video' : '1-2 oraciones, el qué nunca el cómo'}",
   "prueba": "${b.testimonio ? 'prueba social basada en testimonio real o inventado creíble' : ''}",
   "cta": "CTA completo con fórmula entregable + resultado + mínimo esfuerzo",
   "produccion": "notas técnicas específicas para el formato elegido"
@@ -2369,7 +2548,7 @@ Respondé ÚNICAMENTE en JSON válido con esta estructura:
       headers: { 'Content-Type': 'application/json',  },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2000,
+        max_tokens: (b.formato === 'youtube' ? 4000 : b.formato === 'carrusel' ? 3000 : 2000),
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -2416,7 +2595,7 @@ function renderScript() {
 
   const b = state.briefing;
   const s = state.script;
-  const formatoLabels = { 'reel-camara':'Reel', 'reel-qa':'Q&A', 'reel-pantalla':'Pantalla Dividida', 'carrusel':'Carrusel', 'reel-ranking':'Ranking' };
+  const formatoLabels = { 'reel-camara':'Reel', 'reel-qa':'Q&A', 'reel-pantalla':'Pantalla Dividida', 'carrusel':'Carrusel', 'reel-ranking':'Ranking', 'youtube':'YouTube' };
   const tipoLabels = { problema:'Problema', solucion:'Solución', producto:'Producto', mentalidad:'Mentalidad' };
   const objLabels = { viralidad:'Viralidad', autoridad:'Autoridad', ventas:'Ventas', comunidad:'Comunidad' };
 
@@ -2424,6 +2603,7 @@ function renderScript() {
     <span class="tag tag-purple">${formatoLabels[b.formato]||b.formato}</span>
     <span class="tag tag-green">${tipoLabels[b.tipo]||b.tipo}</span>
     <span class="tag tag-orange">${objLabels[b.objetivo]||b.objetivo}</span>
+    ${b.estructura ? `<span class="tag" style="background:rgba(96,165,250,0.15); color:#93c5fd;">${Object.values(ESTRUCTURAS).flat().find(e=>e.id===b.estructura)?.nombre||''}</span>` : ''}
   `;
   document.getElementById('output-title').textContent = b.angulo.substring(0, 50) + (b.angulo.length > 50 ? '...' : '');
 
@@ -2448,6 +2628,73 @@ function renderScript() {
   document.getElementById('body-cta').textContent = s.cta;
   document.getElementById('body-produccion').textContent = s.produccion;
 
+  // Carrusel: render slides
+  const secProblema = document.getElementById('section-problema');
+  const secSolucion = document.getElementById('section-solucion');
+  const secCarrusel = document.getElementById('section-carrusel') || (() => {
+    const d = document.createElement('div'); d.id = 'section-carrusel'; d.className = 'script-section';
+    secProblema.parentNode.insertBefore(d, secProblema); return d;
+  })();
+  const secYoutube = document.getElementById('section-youtube') || (() => {
+    const d = document.createElement('div'); d.id = 'section-youtube'; d.className = 'script-section';
+    secProblema.parentNode.insertBefore(d, secProblema); return d;
+  })();
+
+  if(b.formato === 'carrusel' && s.slides?.length) {
+    secCarrusel.style.display = 'block';
+    secYoutube.style.display = 'none';
+    const tipoColors = { portada:'var(--accent)', contenido:'var(--text2)', cta:'var(--accent3)' };
+    secCarrusel.innerHTML = `
+      <div class="script-section-header">
+        <div class="script-section-label">📑 Slides del carrusel (${s.slides.length})</div>
+        <button class="copy-btn" onclick="copiarSlides()">Copiar todos</button>
+      </div>
+      <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
+        ${s.slides.map(sl => `
+          <div style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; display:flex; gap:12px; align-items:flex-start;">
+            <div style="min-width:28px; height:28px; border-radius:8px; background:var(--bg4); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; color:${tipoColors[sl.tipo]||'var(--text2)'};">${sl.num}</div>
+            <div style="flex:1;">
+              <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:${tipoColors[sl.tipo]||'var(--text3)'}; margin-bottom:4px;">${sl.tipo?.toUpperCase()}</div>
+              <div style="font-family:'Syne',sans-serif; font-size:14px; font-weight:700; color:var(--text); margin-bottom:4px;">${sl.titulo}</div>
+              ${sl.subtitulo ? `<div style="font-size:12px; color:var(--text3);">${sl.subtitulo}</div>` : ''}
+              ${sl.texto ? `<div style="font-size:13px; color:var(--text2); margin-top:4px;">${sl.texto}</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    secProblema.style.display = 'none';
+    secSolucion.style.display = 'none';
+  } else if(b.formato === 'youtube' && s.secciones?.length) {
+    secYoutube.style.display = 'block';
+    secCarrusel.style.display = 'none';
+    secYoutube.innerHTML = `
+      <div class="script-section-header">
+        <div class="script-section-label">▶️ Guión de YouTube — ${b.ytDuracion} min</div>
+        <button class="copy-btn" onclick="copiarYoutube()">Copiar todo</button>
+      </div>
+      <div style="padding:16px; display:flex; flex-direction:column; gap:12px;">
+        ${s.secciones.map((sec, i) => `
+          <div style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden;">
+            <div style="padding:10px 14px; background:var(--bg4); display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border);">
+              <span style="font-size:11px; font-weight:700; color:var(--accent); font-family:'Syne',sans-serif;">${sec.timestamp}</span>
+              <span style="font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:0.5px;">${sec.titulo}</span>
+              <button class="copy-btn" style="margin-left:auto; font-size:10px;" onclick="navigator.clipboard.writeText(this.closest('.script-section').querySelectorAll('[data-guion]')[${i}]?.textContent||''); showToast('Copiado ✓')">Copiar</button>
+            </div>
+            <div style="padding:14px 16px; font-size:13px; line-height:1.8; color:var(--text); white-space:pre-wrap;" data-guion>${sec.guion}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    secProblema.style.display = 'none';
+    secSolucion.style.display = 'none';
+  } else {
+    secCarrusel.style.display = 'none';
+    secYoutube.style.display = 'none';
+    secProblema.style.display = 'block';
+    secSolucion.style.display = 'block';
+  }
+
   // Hide CTA for mentalidad
   if(b.tipo === 'mentalidad') {
     document.getElementById('section-cta').style.display = 'none';
@@ -2463,6 +2710,22 @@ function renderScript() {
   // Show edit panel
   const editPanel = document.getElementById('edit-ia-panel');
   if(editPanel) editPanel.style.display = 'block';
+}
+
+function copiarSlides() {
+  const s = state.script;
+  if(!s.slides?.length) return;
+  const text = s.slides.map(sl => `SLIDE ${sl.num} (${sl.tipo?.toUpperCase()})\n${sl.titulo}${sl.subtitulo?'\n'+sl.subtitulo:''}${sl.texto?'\n'+sl.texto:''}`).join('\n\n');
+  navigator.clipboard.writeText(text);
+  showToast('Slides copiados ✓');
+}
+
+function copiarYoutube() {
+  const s = state.script;
+  if(!s.secciones?.length) return;
+  const text = s.secciones.map(sec => `[${sec.timestamp}] ${sec.titulo}\n${sec.guion}`).join('\n\n---\n\n');
+  navigator.clipboard.writeText(text);
+  showToast('Guión de YouTube copiado ✓');
 }
 
 function selectHook(idx, el) {
@@ -2558,7 +2821,7 @@ function renderHistorial(filter = '') {
     return;
   }
 
-  const formatoLabels = { 'reel-camara':'🎥 Reel', 'reel-qa':'❓ Q&A', 'reel-pantalla':'📱 Pantalla', 'carrusel':'📑 Carrusel', 'reel-ranking':'🏆 Ranking' };
+  const formatoLabels = { 'reel-camara':'🎥 Reel', 'reel-qa':'❓ Q&A', 'reel-pantalla':'📱 Pantalla', 'carrusel':'📑 Carrusel', 'reel-ranking':'🏆 Ranking', 'youtube':'▶️ YouTube' };
   const tipoColors = { problema:'tag-green', solucion:'tag-green', producto:'tag-purple', mentalidad:'tag-orange' };
 
   grid.innerHTML = filtered.map(s => `
@@ -4219,6 +4482,14 @@ function nuevoGuion() {
 
   // Reset testimony
   toggleTestimonio(true, document.getElementById('testimonio-si'));
+
+  document.getElementById('carrusel-config').style.display = 'none';
+  document.getElementById('youtube-config').style.display = 'none';
+  state.briefing.slides = 10;
+  state.briefing.ytDuracion = 10;
+  state.briefing.ytEstilo = 'educativo';
+  state.briefing.estructura = null;
+  document.getElementById('estructura-selector').style.display = 'none';
 
   // Reset output
   document.getElementById('output-empty').style.display = 'flex';

@@ -948,6 +948,7 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="nav-tab" onclick="switchPage('generator')">Crear Guión</div>
     <div class="nav-tab" onclick="switchPage('historias')">Historias</div>
     <div class="nav-tab" onclick="switchPage('ads')">Ads</div>
+    <div class="nav-tab" onclick="switchPage('retencion')">Retención</div>
     <div class="nav-tab" onclick="switchPage('historial')">Historial</div>
     <div class="nav-tab" onclick="switchPage('calendario')">Calendario</div>
     <div class="nav-tab" onclick="switchPage('metricas')">Métricas</div>
@@ -1281,6 +1282,79 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <div id="ads-result" style="display:none;"></div>
+
+    <!-- TRACKER DE ADS -->
+    <div class="card" style="margin-top:24px;">
+      <div class="flex-between" style="margin-bottom:4px;">
+        <div>
+          <div class="section-label" style="margin-bottom:4px;">📊 Tracker de Ads</div>
+          <div class="text-sm">Seguimiento diario del embudo completo — igual a tu planilla de Google Sheets</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="copy-all-btn" onclick="switchAdTrackerView('daily')" id="btn-view-daily" style="font-size:11px; padding:6px 14px;">Diario</button>
+          <button class="copy-all-btn" onclick="switchAdTrackerView('analytics')" id="btn-view-analytics" style="font-size:11px; padding:6px 14px;">Análisis</button>
+          <button class="track-btn" onclick="abrirNuevoAdRow()" style="font-size:12px;">+ Cargar día</button>
+        </div>
+      </div>
+
+      <!-- BENCHMARKS -->
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin:16px 0; padding:12px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); width:100%; margin-bottom:6px;">Benchmarks de referencia</div>
+        <span style="font-size:11px; background:var(--bg4); padding:3px 10px; border-radius:8px; color:var(--text2);">💰 Inversión: $5-30 USD/día</span>
+        <span style="font-size:11px; background:var(--bg4); padding:3px 10px; border-radius:8px; color:var(--text2);">👤 Costo/follow: $0.1-$2</span>
+        <span style="font-size:11px; background:var(--bg4); padding:3px 10px; border-radius:8px; color:var(--text2);">📅 Agendas: 1-2/día</span>
+        <span style="font-size:11px; background:var(--bg4); padding:3px 10px; border-radius:8px; color:var(--text2);">💵 Costo/agenda: $5-40</span>
+        <span style="font-size:11px; background:var(--bg4); padding:3px 10px; border-radius:8px; color:var(--text2);">✅ Show rate: 70-80%</span>
+        <span style="font-size:11px; background:var(--bg4); padding:3px 10px; border-radius:8px; color:var(--text2);">🎯 % Ofertas: 50-100%</span>
+        <span style="font-size:11px; background:var(--bg4); padding:3px 10px; border-radius:8px; color:var(--text2);">🔒 Cierre: 20-35%</span>
+        <span style="font-size:11px; background:var(--bg4); padding:3px 10px; border-radius:8px; color:var(--text2);">📈 ROI: 400-2000%</span>
+      </div>
+
+      <!-- VISTA DIARIA -->
+      <div id="ad-tracker-daily">
+        <div id="ad-tracker-empty" style="text-align:center; padding:30px; color:var(--text3);">
+          <div style="font-size:28px; margin-bottom:10px;">📋</div>
+          <div>Cargá tu primer día de métricas</div>
+        </div>
+        <div id="ad-tracker-table-wrap" style="display:none; overflow-x:auto;">
+          <table class="tracker-table" style="min-width:900px;">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>💰 $ Ads</th>
+                <th>📥 Inbound</th>
+                <th>📤 Outbound</th>
+                <th>👤 Seguidores</th>
+                <th>$/Follow</th>
+                <th>📅 Agendas DM</th>
+                <th>📅 Agendas Perfil</th>
+                <th>$/Agenda</th>
+                <th>✅ Show</th>
+                <th>Show%</th>
+                <th>🎯 Ofertas</th>
+                <th>%Oferta</th>
+                <th>🔒 Cierres</th>
+                <th>Cierre%</th>
+                <th>💵 Cash</th>
+                <th>📋 Revenue</th>
+                <th>ROI Cash</th>
+                <th>ROI Rev</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="ad-tracker-body"></tbody>
+            <tfoot id="ad-tracker-totals"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- VISTA ANÁLISIS -->
+      <div id="ad-tracker-analytics" style="display:none;">
+        <div id="ad-analytics-body">
+          <div style="text-align:center; padding:30px; color:var(--text3);">Cargá al menos 3 días para ver el análisis</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1457,6 +1531,166 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ===== RETENCIÓN ===== -->
+<div id="page-retencion" class="page">
+  <div style="padding-top:32px; max-width:860px;">
+    <div class="flex-between" style="margin-bottom:8px;">
+      <div class="page-title">Análisis de Retención</div>
+    </div>
+    <div class="text-sm" style="margin-bottom:28px;">Cargá los datos de retención de un reel, la IA diagnostica qué está fallando y reescribe la parte problemática.</div>
+
+    <!-- STEP INDICATOR -->
+    <div style="display:flex; align-items:center; gap:0; margin-bottom:32px;">
+      <div id="ret-step-1-ind" style="display:flex; align-items:center; gap:8px; cursor:pointer;" onclick="goRetStep(1)">
+        <div id="ret-dot-1" style="width:28px; height:28px; border-radius:50%; background:var(--accent2); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; color:white; transition:all 0.3s;">1</div>
+        <span style="font-size:13px; font-weight:600; color:var(--text);">Elegir guión</span>
+      </div>
+      <div style="flex:1; height:1px; background:var(--border); margin:0 12px;"></div>
+      <div id="ret-step-2-ind" style="display:flex; align-items:center; gap:8px; cursor:pointer;" onclick="goRetStep(2)">
+        <div id="ret-dot-2" style="width:28px; height:28px; border-radius:50%; background:var(--bg4); border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; color:var(--text3); transition:all 0.3s;">2</div>
+        <span style="font-size:13px; font-weight:600; color:var(--text3);">Cargar datos</span>
+      </div>
+      <div style="flex:1; height:1px; background:var(--border); margin:0 12px;"></div>
+      <div id="ret-step-3-ind" style="display:flex; align-items:center; gap:8px;">
+        <div id="ret-dot-3" style="width:28px; height:28px; border-radius:50%; background:var(--bg4); border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; color:var(--text3); transition:all 0.3s;">3</div>
+        <span style="font-size:13px; font-weight:600; color:var(--text3);">Diagnóstico</span>
+      </div>
+    </div>
+
+    <!-- STEP 1: Elegir guión -->
+    <div id="ret-step-1">
+      <div class="card">
+        <div class="section-label">¿De qué video vas a analizar la retención?</div>
+        <div class="text-sm" style="margin-bottom:16px;">La IA necesita conocer el guión para diagnosticar con precisión qué parte está fallando.</div>
+
+        <div id="ret-script-list" style="display:flex; flex-direction:column; gap:10px; max-height:400px; overflow-y:auto;">
+          <div style="text-align:center; padding:30px; color:var(--text3);">Cargá guiones primero en "Crear Guión"</div>
+        </div>
+
+        <div style="margin-top:20px; padding:14px 16px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <div style="font-size:12px; font-weight:600; color:var(--text2); margin-bottom:4px;">¿No encontrás el guión?</div>
+          <div style="font-size:12px; color:var(--text3);">También podés continuar sin guión seleccionado — pegá el texto del guión manualmente en el paso 2.</div>
+        </div>
+
+        <button class="gen-btn" style="margin-top:16px;" onclick="retNextStep(1)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Cargar datos -->
+    <div id="ret-step-2" style="display:none;">
+      <div class="card" style="margin-bottom:16px;">
+        <div style="display:flex; align-items:center; gap:12px; padding:12px 16px; background:var(--bg3); border-radius:var(--radius-sm); margin-bottom:20px;">
+          <div style="font-size:20px;">📹</div>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:var(--text);" id="ret-selected-script-name">Sin guión seleccionado</div>
+            <div style="font-size:11px; color:var(--text3);" id="ret-selected-script-tipo"></div>
+          </div>
+          <button class="copy-btn" onclick="goRetStep(1)" style="margin-left:auto;">Cambiar</button>
+        </div>
+
+        <!-- OPCIÓN A: Screenshot -->
+        <div style="margin-bottom:24px;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="width:24px; height:24px; border-radius:50%; background:var(--accent2); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:white; flex-shrink:0;">A</div>
+            <div class="field-label" style="margin:0;">Subir screenshot de Instagram</div>
+            <span style="font-size:10px; background:rgba(232,255,71,0.15); color:var(--accent); padding:2px 8px; border-radius:10px; font-weight:700;">RECOMENDADO</span>
+          </div>
+          <div id="ret-screenshot-drop" style="border:2px dashed var(--border2); border-radius:var(--radius); padding:32px; text-align:center; cursor:pointer; transition:all 0.2s;" onclick="document.getElementById('ret-screenshot-input').click()" ondragover="event.preventDefault(); this.style.borderColor='var(--accent)'" ondragleave="this.style.borderColor='var(--border2)'" ondrop="handleRetScreenshot(event)">
+            <div style="font-size:32px; margin-bottom:8px;">📸</div>
+            <div style="font-size:14px; font-weight:600; color:var(--text2);">Arrastrá o hacé clic para subir</div>
+            <div style="font-size:12px; color:var(--text3); margin-top:4px;">La captura de "Insights de reel" de Instagram</div>
+            <input type="file" id="ret-screenshot-input" accept="image/*" style="display:none;" onchange="handleRetScreenshotFile(this)">
+          </div>
+          <div id="ret-screenshot-preview" style="display:none; margin-top:12px; text-align:center;">
+            <img id="ret-screenshot-img" style="max-height:200px; border-radius:10px; border:1px solid var(--border2);">
+            <div style="margin-top:8px; font-size:12px; color:#34d399; font-weight:600;">✓ Screenshot cargado</div>
+            <button class="copy-btn" style="margin-top:6px;" onclick="clearRetScreenshot()">Quitar</button>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px; margin:20px 0;">
+          <div style="flex:1; height:1px; background:var(--border);"></div>
+          <span style="font-size:12px; color:var(--text3); font-weight:600;">O CARGÁ MANUALMENTE</span>
+          <div style="flex:1; height:1px; background:var(--border);"></div>
+        </div>
+
+        <!-- OPCIÓN B: Manual -->
+        <div>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+            <div style="width:24px; height:24px; border-radius:50%; background:var(--bg4); border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--text2); flex-shrink:0;">B</div>
+            <div class="field-label" style="margin:0;">Datos manuales</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div>
+              <div class="field-label">Tasa de omisión del reel <span style="font-size:10px; color:var(--text3);">(%)</span></div>
+              <input type="number" class="text-input" id="ret-skip-rate" placeholder="Ej: 62.4" style="min-height:auto; height:40px; resize:none;">
+            </div>
+            <div>
+              <div class="field-label">Tu tasa de omisión normal <span style="font-size:10px; color:var(--text3);">(%)</span></div>
+              <input type="number" class="text-input" id="ret-skip-normal" placeholder="Ej: 64.8" style="min-height:auto; height:40px; resize:none;">
+            </div>
+            <div>
+              <div class="field-label">Tiempo medio de reproducción <span style="font-size:10px; color:var(--text3);">(segundos)</span></div>
+              <input type="number" class="text-input" id="ret-avg-time" placeholder="Ej: 5" style="min-height:auto; height:40px; resize:none;">
+            </div>
+            <div>
+              <div class="field-label">Duración total del reel <span style="font-size:10px; color:var(--text3);">(segundos)</span></div>
+              <input type="number" class="text-input" id="ret-duration" placeholder="Ej: 50" style="min-height:auto; height:40px; resize:none;">
+            </div>
+          </div>
+
+          <div style="margin-top:16px;">
+            <div class="field-label">Puntos de retención — ¿cuánto % quedaba viendo en cada momento?</div>
+            <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:6px;">
+              <div style="background:var(--bg3); border-radius:var(--radius-sm); padding:12px; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:10px; color:var(--text3); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px;">Seg 3</div>
+                <div style="font-size:10px; color:var(--text3); margin-bottom:8px;">(Hook)</div>
+                <input type="number" class="text-input" id="ret-p3" placeholder="%" style="min-height:auto; height:36px; resize:none; text-align:center; font-weight:700; font-size:15px;">
+              </div>
+              <div style="background:var(--bg3); border-radius:var(--radius-sm); padding:12px; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:10px; color:var(--text3); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px;">Seg 10</div>
+                <div style="font-size:10px; color:var(--text3); margin-bottom:8px;">(Transición)</div>
+                <input type="number" class="text-input" id="ret-p10" placeholder="%" style="min-height:auto; height:36px; resize:none; text-align:center; font-weight:700; font-size:15px;">
+              </div>
+              <div style="background:var(--bg3); border-radius:var(--radius-sm); padding:12px; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:10px; color:var(--text3); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px;">50%</div>
+                <div style="font-size:10px; color:var(--text3); margin-bottom:8px;">(Desarrollo)</div>
+                <input type="number" class="text-input" id="ret-p50" placeholder="%" style="min-height:auto; height:36px; resize:none; text-align:center; font-weight:700; font-size:15px;">
+              </div>
+              <div style="background:var(--bg3); border-radius:var(--radius-sm); padding:12px; border:1px solid var(--border); text-align:center;">
+                <div style="font-size:10px; color:var(--text3); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px;">Final</div>
+                <div style="font-size:10px; color:var(--text3); margin-bottom:8px;">(Cierre/CTA)</div>
+                <input type="number" class="text-input" id="ret-pfinal" placeholder="%" style="min-height:auto; height:36px; resize:none; text-align:center; font-weight:700; font-size:15px;">
+              </div>
+            </div>
+          </div>
+
+          <div class="field-label mt16">Guión manual <span style="font-size:10px; color:var(--text3);">(si no seleccionaste uno arriba)</span></div>
+          <textarea class="text-input" id="ret-guion-manual" placeholder="Pegá el guión completo acá si no lo tenés guardado en historial..." style="min-height:80px;"></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button class="copy-all-btn" onclick="goRetStep(1)">← Atrás</button>
+          <button class="gen-btn" onclick="analizarRetencion()" id="btn-analizar-ret">🔍 Analizar y diagnosticar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Diagnóstico -->
+    <div id="ret-step-3" style="display:none;">
+      <div id="ret-loading" class="loading-state" style="display:none;">
+        <div class="spinner"></div>
+        <div style="font-family:'Syne',sans-serif; font-weight:700; font-size:16px;">Analizando retención...</div>
+        <div class="text-sm" id="ret-loading-msg">Leyendo la curva de abandono...</div>
+      </div>
+      <div id="ret-result" style="display:none; flex-direction:column; gap:16px;"></div>
+      <button class="copy-all-btn" style="margin-top:16px; display:none;" id="btn-ret-back" onclick="goRetStep(2)">← Volver a cargar datos</button>
+    </div>
+
   </div>
 </div>
 
@@ -1748,6 +1982,74 @@ input[type="range"]::-webkit-slider-thumb {
 
 </div><!-- end main -->
 
+<!-- MODAL: Nuevo día de ads -->
+<div class="modal-overlay" id="ad-row-modal">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="document.getElementById('ad-row-modal').classList.remove('open')">×</button>
+    <div class="modal-title">Cargar día de métricas</div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div>
+        <div class="field-label">Fecha <span class="required">*</span></div>
+        <input type="date" class="text-input" id="ad-fecha" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">$ Inversión en Ads</div>
+        <input type="number" class="text-input" id="ad-inversion" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">Inbounds (llegaron solos)</div>
+        <input type="number" class="text-input" id="ad-inbound" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">Outbounds (saliste a buscar)</div>
+        <input type="number" class="text-input" id="ad-outbound" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">Seguidores nuevos</div>
+        <input type="number" class="text-input" id="ad-seguidores" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">Agendas desde DM</div>
+        <input type="number" class="text-input" id="ad-agendas-dm" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">Agendas desde Perfil</div>
+        <input type="number" class="text-input" id="ad-agendas-perfil" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">Se presentaron (show)</div>
+        <input type="number" class="text-input" id="ad-show" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">Ofertas hechas</div>
+        <input type="number" class="text-input" id="ad-ofertas" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">Llamadas cerradas</div>
+        <input type="number" class="text-input" id="ad-cierres" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">💵 Cash collected ($) <span style="font-size:10px; color:var(--text3);">— lo que entró hoy</span></div>
+        <input type="number" class="text-input" id="ad-cash" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">📋 Revenue / Facturación ($) <span style="font-size:10px; color:var(--text3);">— valor total del contrato</span></div>
+        <input type="number" class="text-input" id="ad-revenue" placeholder="0" style="min-height:auto; height:40px; resize:none;">
+      </div>
+      <div>
+        <div class="field-label">📝 Comentario (opcional)</div>
+        <input type="text" class="text-input" id="ad-comentario" placeholder="Cambio de copy, nueva audiencia..." style="min-height:auto; height:40px; resize:none;">
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-top:20px;">
+      <button class="copy-all-btn" onclick="document.getElementById('ad-row-modal').classList.remove('open')" style="flex:1;">Cancelar</button>
+      <button class="save-btn" onclick="guardarAdRow()" style="flex:2;">Guardar día</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: Nueva métrica -->
 <div class="modal-overlay" id="metrica-modal">
   <div class="modal" style="max-width:480px;">
@@ -1811,6 +2113,7 @@ const state = {
   metrics: JSON.parse(localStorage.getItem('sm_metrics') || '[]'),
   angulos: JSON.parse(localStorage.getItem('sm_angulos') || '[]'),
   perfil: JSON.parse(localStorage.getItem('sm_perfil') || '{}'),
+  adMetrics: JSON.parse(localStorage.getItem('sm_admetrics') || '[]'),
   calDate: new Date(),
   calFilter: 'todos',
   activeModal: null,
@@ -1829,7 +2132,7 @@ function switchPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
-  const tabs = { dashboard:0, angulos:1, generator:2, historias:3, ads:4, historial:5, calendario:6, metricas:7 };
+  const tabs = { dashboard:0, angulos:1, generator:2, historias:3, ads:4, retencion:5, historial:6, calendario:7, metricas:8 };
   document.querySelectorAll('.nav-tab')[tabs[page]].classList.add('active');
   state.currentPage = page;
   if(page === 'historial') renderHistorial();
@@ -1839,6 +2142,7 @@ function switchPage(page) {
   if(page === 'angulos') renderAngulos();
   if(page === 'historias') renderHistorias();
   if(page === 'ads') renderAds();
+  if(page === 'retencion') renderRetencion();
 }
 
 // ===================== GENERATOR STEPS =====================
@@ -3481,9 +3785,537 @@ function borrarMetrica(id) {
 }
 
 function renderHistorias() { /* ready */ }
-function renderAds() { /* ready */ }
+function renderAds() { renderAdTracker(); }
 
-// ===================== INIT =====================
+// ===================== AD TRACKER =====================
+function switchAdTrackerView(view) {
+  document.getElementById('ad-tracker-daily').style.display = view === 'daily' ? 'block' : 'none';
+  document.getElementById('ad-tracker-analytics').style.display = view === 'analytics' ? 'block' : 'none';
+  document.getElementById('btn-view-daily').style.borderColor = view === 'daily' ? 'var(--accent)' : '';
+  document.getElementById('btn-view-analytics').style.borderColor = view === 'analytics' ? 'var(--accent)' : '';
+  if(view === 'analytics') renderAdAnalytics();
+}
+
+function abrirNuevoAdRow() {
+  document.getElementById('ad-fecha').valueAsDate = new Date();
+  ['ad-inversion','ad-inbound','ad-outbound','ad-seguidores','ad-agendas-dm','ad-agendas-perfil','ad-show','ad-ofertas','ad-cierres','ad-cash','ad-revenue','ad-comentario'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.getElementById('ad-row-modal').classList.add('open');
+}
+
+function guardarAdRow() {
+  const fecha = document.getElementById('ad-fecha').value;
+  if(!fecha) { showToast('Ingresá la fecha', '⚠️'); return; }
+  const inv = parseFloat(document.getElementById('ad-inversion').value) || 0;
+  const inb = parseInt(document.getElementById('ad-inbound').value) || 0;
+  const out = parseInt(document.getElementById('ad-outbound').value) || 0;
+  const seg = parseInt(document.getElementById('ad-seguidores').value) || 0;
+  const agDM = parseInt(document.getElementById('ad-agendas-dm').value) || 0;
+  const agPerf = parseInt(document.getElementById('ad-agendas-perfil').value) || 0;
+  const show = parseInt(document.getElementById('ad-show').value) || 0;
+  const ofertas = parseInt(document.getElementById('ad-ofertas').value) || 0;
+  const cierres = parseInt(document.getElementById('ad-cierres').value) || 0;
+  const cash = parseFloat(document.getElementById('ad-cash').value) || 0;
+  const revenue = parseFloat(document.getElementById('ad-revenue').value) || 0;
+  const comentario = document.getElementById('ad-comentario').value;
+
+  const totalAgendas = agDM + agPerf;
+  const costoFollow = seg > 0 && inv > 0 ? inv / seg : 0;
+  const costoAgenda = totalAgendas > 0 && inv > 0 ? inv / totalAgendas : 0;
+  const showRate = totalAgendas > 0 ? (show / totalAgendas) * 100 : 0;
+  const pctOfertas = show > 0 ? (ofertas / show) * 100 : 0;
+  const tasaCierre = ofertas > 0 ? (cierres / ofertas) * 100 : 0;
+  const roi = inv > 0 ? ((cash - inv) / inv) * 100 : 0;
+  const roiRev = inv > 0 && revenue > 0 ? ((revenue - inv) / inv) * 100 : 0;
+
+  const row = { id: Date.now(), fecha, inv, inb, out, seg, agDM, agPerf, show, ofertas, cierres, cash, revenue, comentario, costoFollow, costoAgenda, showRate, pctOfertas, tasaCierre, roi, roiRev };
+  if(!state.adMetrics) state.adMetrics = [];
+  state.adMetrics.push(row);
+  state.adMetrics.sort((a,b) => a.fecha.localeCompare(b.fecha));
+  localStorage.setItem('sm_admetrics', JSON.stringify(state.adMetrics));
+  document.getElementById('ad-row-modal').classList.remove('open');
+  renderAdTracker();
+  showToast('Día guardado ✓ 📊');
+}
+
+function renderAdTracker() {
+  if(!state.adMetrics) state.adMetrics = JSON.parse(localStorage.getItem('sm_admetrics') || '[]');
+  const empty = document.getElementById('ad-tracker-empty');
+  const wrap = document.getElementById('ad-tracker-table-wrap');
+  if(!empty || !wrap) return;
+  if(!state.adMetrics.length) {
+    empty.style.display = 'block'; wrap.style.display = 'none'; return;
+  }
+  empty.style.display = 'none'; wrap.style.display = 'block';
+
+  const fmtD = v => v > 0 ? '$' + parseFloat(v).toFixed(1) : '—';
+  const fmtP = v => v > 0 ? Math.round(v) + '%' : '—';
+  const kC = (v, g, ok) => v >= g ? '#34d399' : v >= ok ? 'var(--accent)' : '#f87171';
+
+  document.getElementById('ad-tracker-body').innerHTML = state.adMetrics.map(r => `
+    <tr>
+      <td style="white-space:nowrap; font-weight:600; font-size:12px;">${r.fecha}${r.comentario ? `<div style="font-size:10px; color:var(--text3); font-weight:400;">${r.comentario}</div>` : ''}</td>
+      <td>${fmtD(r.inv)}</td>
+      <td>${r.inb||0}</td>
+      <td>${r.out||0}</td>
+      <td>${r.seg||0}</td>
+      <td style="color:${kC(r.costoFollow>0?1/r.costoFollow:0, 0.5, 0.2)};">${fmtD(r.costoFollow)}</td>
+      <td>${r.agDM||0}</td>
+      <td>${r.agPerf||0}</td>
+      <td style="color:${r.costoAgenda>0&&r.costoAgenda<=40?'#34d399':r.costoAgenda<=80?'var(--accent)':'#f87171'};">${fmtD(r.costoAgenda)}</td>
+      <td>${r.show||0}</td>
+      <td style="color:${kC(r.showRate,70,50)};">${fmtP(r.showRate)}</td>
+      <td>${r.ofertas||0}</td>
+      <td style="color:${kC(r.pctOfertas,50,30)};">${fmtP(r.pctOfertas)}</td>
+      <td>${r.cierres||0}</td>
+      <td style="color:${kC(r.tasaCierre,20,10)};">${fmtP(r.tasaCierre)}</td>
+      <td style="color:var(--accent); font-weight:600;">${fmtD(r.cash)}</td>
+      <td style="color:#a78bfa; font-weight:600;">${r.revenue ? fmtD(r.revenue) : '—'}</td>
+      <td style="color:${kC(r.roi,400,100)}; font-weight:700;">${r.roi?Math.round(r.roi)+'%':'—'}</td>
+      <td style="color:${r.roiRev?kC(r.roiRev,1000,400):'var(--text3)'}; font-weight:700;">${r.roiRev?Math.round(r.roiRev)+'%':'—'}</td>
+      <td><button class="copy-btn" style="color:#f87171; border-color:rgba(248,113,113,0.3); font-size:10px;" onclick="borrarAdRow(${r.id})">✕</button></td>
+    </tr>
+  `).join('');
+
+  const tot = state.adMetrics.reduce((a,r) => ({
+    inv:a.inv+(r.inv||0), inb:a.inb+(r.inb||0), out:a.out+(r.out||0),
+    seg:a.seg+(r.seg||0), agDM:a.agDM+(r.agDM||0), agPerf:a.agPerf+(r.agPerf||0),
+    show:a.show+(r.show||0), ofertas:a.ofertas+(r.ofertas||0),
+    cierres:a.cierres+(r.cierres||0), cash:a.cash+(r.cash||0),
+    revenue:a.revenue+(r.revenue||0)
+  }), {inv:0,inb:0,out:0,seg:0,agDM:0,agPerf:0,show:0,ofertas:0,cierres:0,cash:0,revenue:0});
+
+  const totAg = tot.agDM+tot.agPerf;
+  const totROI = tot.inv>0 ? Math.round(((tot.cash-tot.inv)/tot.inv)*100) : 0;
+  const totROIRev = tot.inv>0 && tot.revenue>0 ? Math.round(((tot.revenue-tot.inv)/tot.inv)*100) : 0;
+  const totSR = totAg>0 ? Math.round((tot.show/totAg)*100) : 0;
+  const totTC = tot.ofertas>0 ? Math.round((tot.cierres/tot.ofertas)*100) : 0;
+
+  document.getElementById('ad-tracker-totals').innerHTML = `
+    <tr style="background:var(--bg3); font-weight:700; border-top:2px solid var(--border2); font-size:12px;">
+      <td style="color:var(--accent);">TOTALES</td>
+      <td>$${tot.inv.toFixed(0)}</td>
+      <td>${tot.inb}</td><td>${tot.out}</td><td>${tot.seg}</td>
+      <td>$${tot.seg>0?(tot.inv/tot.seg).toFixed(2):'—'}</td>
+      <td>${tot.agDM}</td><td>${tot.agPerf}</td>
+      <td>$${totAg>0?(tot.inv/totAg).toFixed(1):'—'}</td>
+      <td>${tot.show}</td>
+      <td style="color:${kC(totSR,70,50)};">${totSR}%</td>
+      <td>${tot.ofertas}</td><td>—</td><td>${tot.cierres}</td>
+      <td style="color:${kC(totTC,20,10)};">${totTC}%</td>
+      <td style="color:var(--accent);">$${tot.cash.toFixed(0)}</td>
+      <td style="color:#a78bfa;">$${tot.revenue.toFixed(0)}</td>
+      <td style="color:${kC(totROI,400,100)}; font-weight:800;">${totROI}%</td>
+      <td style="color:${kC(totROIRev,1000,400)}; font-weight:800;">${totROIRev?totROIRev+'%':'—'}</td>
+      <td></td>
+    </tr>
+  `;
+}
+
+function borrarAdRow(id) {
+  if(!confirm('¿Eliminar este día?')) return;
+  state.adMetrics = state.adMetrics.filter(r => r.id !== id);
+  localStorage.setItem('sm_admetrics', JSON.stringify(state.adMetrics));
+  renderAdTracker();
+  showToast('Eliminado');
+}
+
+function renderAdAnalytics() {
+  if(!state.adMetrics) state.adMetrics = JSON.parse(localStorage.getItem('sm_admetrics') || '[]');
+  const body = document.getElementById('ad-analytics-body');
+  if(!body) return;
+  if(state.adMetrics.length < 3) {
+    body.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text3);">Cargá al menos 3 días para ver el análisis</div>`;
+    return;
+  }
+  const datos = state.adMetrics;
+  const tot = datos.reduce((a,r) => ({
+    inv:a.inv+(r.inv||0), cash:a.cash+(r.cash||0), revenue:a.revenue+(r.revenue||0),
+    ag:a.ag+(r.agDM||0)+(r.agPerf||0), show:a.show+(r.show||0),
+    ofertas:a.ofertas+(r.ofertas||0), cierres:a.cierres+(r.cierres||0), seg:a.seg+(r.seg||0)
+  }), {inv:0,cash:0,revenue:0,ag:0,show:0,ofertas:0,cierres:0,seg:0});
+
+  const roi = tot.inv>0 ? Math.round(((tot.cash-tot.inv)/tot.inv)*100) : 0;
+  const roiRev = tot.inv>0 && tot.revenue>0 ? Math.round(((tot.revenue-tot.inv)/tot.inv)*100) : 0;
+  const costoAg = tot.ag>0 ? (tot.inv/tot.ag).toFixed(1) : '—';
+  const showRate = tot.ag>0 ? Math.round((tot.show/tot.ag)*100) : 0;
+  const tasaCierre = tot.ofertas>0 ? Math.round((tot.cierres/tot.ofertas)*100) : 0;
+  const kC = (v,g,ok) => v>=g?'#34d399':v>=ok?'var(--accent)':'#f87171';
+
+  const conROI = datos.filter(r => r.inv>0 && r.cash>=0);
+  const mejorDia = conROI.length ? conROI.reduce((a,b) => a.roi>b.roi?a:b) : null;
+  const peorDia = conROI.length ? conROI.reduce((a,b) => a.roi<b.roi?a:b) : null;
+
+  const porSemana = {};
+  datos.forEach(r => {
+    const d = new Date(r.fecha+'T00:00:00');
+    const wk = Math.ceil(d.getDate()/7);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')} S${wk}`;
+    if(!porSemana[key]) porSemana[key] = {cash:0,inv:0,ag:0,cierres:0};
+    porSemana[key].cash += r.cash||0; porSemana[key].inv += r.inv||0;
+    porSemana[key].ag += (r.agDM||0)+(r.agPerf||0); porSemana[key].cierres += r.cierres||0;
+  });
+  const semanas = Object.entries(porSemana).slice(-6);
+  const maxCash = Math.max(...semanas.map(([,v])=>v.cash),1);
+
+  body.innerHTML = `
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px;">
+      ${[
+        {label:'ROI Cash', val:roi+'%', color:kC(roi,400,100), bench:'Meta: +400%'},
+        {label:'ROI Revenue', val:roiRev?roiRev+'%':'—', color:roiRev?kC(roiRev,1000,400):'var(--text3)', bench:'Meta: +1000%'},
+        {label:'Costo/Agenda', val:'$'+costoAg, color:parseFloat(costoAg)<=40?'#34d399':parseFloat(costoAg)<=80?'var(--accent)':'#f87171', bench:'Meta: <$40'},
+        {label:'Show Rate', val:showRate+'%', color:kC(showRate,70,50), bench:'Meta: 70-80%'},
+        {label:'Tasa Cierre', val:tasaCierre+'%', color:kC(tasaCierre,20,10), bench:'Meta: 20-35%'},
+        {label:'Cash vs Revenue', val: tot.revenue>0?'$'+tot.cash.toFixed(0)+' / $'+tot.revenue.toFixed(0):'—', color:'#a78bfa', bench:'Cobrado vs Facturado'},
+      ].map(k=>`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center;">
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;">${k.label}</div>
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:${k.color};">${k.val}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;">${k.bench}</div>
+      </div>`).join('')}
+    </div>
+
+    <div style="margin-bottom:24px;">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:14px;">Embudo de conversión</div>
+      ${[
+        {label:'👥 Seguidores nuevos', val:tot.seg, color:'#7c3aed'},
+        {label:'📅 Agendas totales', val:tot.ag, color:'#3b82f6'},
+        {label:'✅ Se presentaron', val:tot.show, color:'#f97316'},
+        {label:'🎯 Ofertas hechas', val:tot.ofertas, color:'#e8ff47'},
+        {label:'🔒 Cerrados', val:tot.cierres, color:'#34d399'},
+      ].map(f=>`<div style="margin-bottom:10px;display:flex;align-items:center;gap:10px;">
+        <div style="font-size:12px;color:var(--text2);min-width:190px;">${f.label}</div>
+        <div style="flex:1;background:var(--bg4);border-radius:6px;height:12px;overflow:hidden;">
+          <div style="width:${Math.min(100,tot.seg>0?Math.round((f.val/tot.seg)*100):0)}%;background:${f.color};height:100%;border-radius:6px;"></div>
+        </div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);min-width:36px;text-align:right;">${f.val}</div>
+      </div>`).join('')}
+    </div>
+
+    ${semanas.length>=2?`<div style="margin-bottom:24px;">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:14px;">Cash collected por semana</div>
+      ${semanas.map(([sem,v])=>`<div style="margin-bottom:10px;display:flex;align-items:center;gap:10px;">
+        <div style="font-size:11px;color:var(--text3);min-width:90px;">${sem}</div>
+        <div style="flex:1;background:var(--bg4);border-radius:6px;height:10px;overflow:hidden;">
+          <div style="width:${Math.round((v.cash/maxCash)*100)}%;background:var(--accent);height:100%;border-radius:6px;"></div>
+        </div>
+        <div style="font-size:11px;color:var(--accent);font-weight:700;min-width:60px;text-align:right;">$${v.cash.toFixed(0)}</div>
+      </div>`).join('')}
+    </div>`:''}
+
+    ${mejorDia?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:11px;font-weight:700;color:#34d399;margin-bottom:6px;">🏆 MEJOR DÍA</div>
+        <div style="font-size:13px;font-weight:600;">${mejorDia.fecha}</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px;">ROI: <strong style="color:#34d399;">${Math.round(mejorDia.roi)}%</strong> · Cash: $${mejorDia.cash} · Inv: $${mejorDia.inv}</div>
+        ${mejorDia.comentario?`<div style="font-size:11px;color:var(--text3);margin-top:4px;font-style:italic;">${mejorDia.comentario}</div>`:''}
+      </div>
+      ${peorDia&&peorDia.id!==mejorDia.id?`<div style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);border-radius:var(--radius-sm);padding:14px;">
+        <div style="font-size:11px;font-weight:700;color:#f87171;margin-bottom:6px;">📉 DÍA MÁS BAJO</div>
+        <div style="font-size:13px;font-weight:600;">${peorDia.fecha}</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px;">ROI: <strong style="color:#f87171;">${Math.round(peorDia.roi)}%</strong> · Cash: $${peorDia.cash} · Inv: $${peorDia.inv}</div>
+        ${peorDia.comentario?`<div style="font-size:11px;color:var(--text3);margin-top:4px;font-style:italic;">${peorDia.comentario}</div>`:''}
+      </div>`:''}
+    </div>`:''}
+  `;
+}
+
+// ===================== RETENCIÓN =====================
+const retState = { step: 1, selectedScript: null, screenshotBase64: null };
+
+function renderRetencion() {
+  retState.step = 1;
+  retState.selectedScript = null;
+  retState.screenshotBase64 = null;
+  showRetStep(1);
+  renderRetScriptList();
+}
+
+function renderRetScriptList() {
+  const list = document.getElementById('ret-script-list');
+  if(!list) return;
+  if(!state.scripts.length) {
+    list.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text3);">Guardá guiones primero en "Crear Guión"</div>`;
+    return;
+  }
+  const fmtLabels = { 'reel-camara':'🎥 Reel', 'reel-qa':'❓ Q&A', 'reel-pantalla':'📱 Pantalla', carrusel:'📑 Carrusel', 'reel-ranking':'🏆 Ranking' };
+  const tipoColors = { problema:'#f87171', solucion:'#34d399', producto:'#a78bfa', mentalidad:'var(--accent3)' };
+  list.innerHTML = state.scripts.map(s => `
+    <div onclick="selectRetScript(${s.id}, this)" id="ret-script-${s.id}" style="padding:14px 16px; background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.2s; display:flex; align-items:flex-start; gap:12px;">
+      <div style="flex:1; min-width:0;">
+        <div style="font-size:13px; font-weight:600; color:var(--text); margin-bottom:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.angulo.substring(0,60)}${s.angulo.length>60?'...':''}</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <span style="font-size:10px; color:${tipoColors[s.tipo]||'var(--accent)'}; font-weight:600; text-transform:uppercase;">${s.tipo}</span>
+          <span style="font-size:10px; color:var(--text3);">${fmtLabels[s.formato]||s.formato}</span>
+          <span style="font-size:10px; color:var(--text3);">${new Date(s.date).toLocaleDateString('es',{day:'2-digit',month:'short'})}</span>
+        </div>
+      </div>
+      <div id="ret-check-${s.id}" style="display:none; color:var(--accent); font-size:18px; font-weight:700;">✓</div>
+    </div>
+  `).join('');
+}
+
+function selectRetScript(id, el) {
+  document.querySelectorAll('#ret-script-list > div').forEach(d => {
+    d.style.borderColor = 'var(--border)';
+    d.style.background = 'var(--bg3)';
+  });
+  document.querySelectorAll('[id^="ret-check-"]').forEach(c => c.style.display = 'none');
+  el.style.borderColor = 'var(--accent)';
+  el.style.background = 'rgba(232,255,71,0.06)';
+  document.getElementById('ret-check-' + id).style.display = 'block';
+  retState.selectedScript = state.scripts.find(s => s.id === id);
+}
+
+function retNextStep(from) {
+  if(from === 1) {
+    const s = retState.selectedScript;
+    const nameEl = document.getElementById('ret-selected-script-name');
+    const tipoEl = document.getElementById('ret-selected-script-tipo');
+    if(nameEl) nameEl.textContent = s ? s.angulo.substring(0,55) + (s.angulo.length>55?'...':'') : 'Sin guión seleccionado';
+    if(tipoEl) tipoEl.textContent = s ? `${s.tipo} · ${s.formato}` : 'Podés pegar el texto manualmente abajo';
+    goRetStep(2);
+  }
+}
+
+function goRetStep(step) {
+  [1,2,3].forEach(i => {
+    document.getElementById('ret-step-' + i).style.display = i === step ? 'block' : 'none';
+    const dot = document.getElementById('ret-dot-' + i);
+    if(i < step) {
+      dot.style.background = 'var(--accent)'; dot.style.color = '#0a0a0f';
+    } else if(i === step) {
+      dot.style.background = 'var(--accent2)'; dot.style.color = 'white';
+    } else {
+      dot.style.background = 'var(--bg4)'; dot.style.color = 'var(--text3)';
+    }
+  });
+  retState.step = step;
+}
+
+function handleRetScreenshot(event) {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if(file && file.type.startsWith('image/')) processRetScreenshot(file);
+}
+
+function handleRetScreenshotFile(input) {
+  if(input.files[0]) processRetScreenshot(input.files[0]);
+}
+
+function processRetScreenshot(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    retState.screenshotBase64 = e.target.result.split(',')[1];
+    document.getElementById('ret-screenshot-img').src = e.target.result;
+    document.getElementById('ret-screenshot-preview').style.display = 'block';
+    document.getElementById('ret-screenshot-drop').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearRetScreenshot() {
+  retState.screenshotBase64 = null;
+  document.getElementById('ret-screenshot-preview').style.display = 'none';
+  document.getElementById('ret-screenshot-drop').style.display = 'block';
+  document.getElementById('ret-screenshot-input').value = '';
+}
+
+async function analizarRetencion() {
+  const btn = document.getElementById('btn-analizar-ret');
+  btn.disabled = true; btn.textContent = '⏳ Analizando...';
+  goRetStep(3);
+  document.getElementById('ret-loading').style.display = 'flex';
+  document.getElementById('ret-result').style.display = 'none';
+  document.getElementById('btn-ret-back').style.display = 'none';
+
+  const msgs = ['Leyendo la curva de abandono...', 'Identificando el punto de quiebre...', 'Comparando con el guión...', 'Generando reescritura...'];
+  let mi = 0;
+  const interval = setInterval(() => {
+    document.getElementById('ret-loading-msg').textContent = msgs[mi % msgs.length]; mi++;
+  }, 1500);
+
+  const s = retState.selectedScript;
+  const guionManual = document.getElementById('ret-guion-manual').value.trim();
+  const guionTexto = s ? `HOOK: ${s.script?.hooks?.[0]?.verbal || ''}\nPROBLEMA: ${s.script?.problema || ''}\nSOLUCIÓN: ${s.script?.solucion || ''}\nCTA: ${s.script?.cta || ''}` : guionManual;
+
+  const skipRate = document.getElementById('ret-skip-rate').value;
+  const skipNormal = document.getElementById('ret-skip-normal').value;
+  const avgTime = document.getElementById('ret-avg-time').value;
+  const duration = document.getElementById('ret-duration').value;
+  const p3 = document.getElementById('ret-p3').value;
+  const p10 = document.getElementById('ret-p10').value;
+  const p50 = document.getElementById('ret-p50').value;
+  const pfinal = document.getElementById('ret-pfinal').value;
+
+  const tieneScreenshot = !!retState.screenshotBase64;
+  const tieneDatos = skipRate || avgTime || p3 || p10;
+
+  if(!tieneScreenshot && !tieneDatos && !guionTexto) {
+    clearInterval(interval);
+    btn.disabled = false; btn.textContent = '🔍 Analizar y diagnosticar';
+    goRetStep(2);
+    showToast('Cargá al menos un dato o screenshot', '⚠️');
+    return;
+  }
+
+  const promptText = `Sos un experto en análisis de retención de contenido en redes sociales. Analizás datos de retención de reels de Instagram para diagnosticar qué está fallando y cómo mejorar el guión.
+
+${guionTexto ? `GUIÓN DEL VIDEO:\n${guionTexto}\n` : ''}
+
+DATOS DE RETENCIÓN:
+${skipRate ? `- Tasa de omisión del reel: ${skipRate}%` : ''}
+${skipNormal ? `- Tasa de omisión normal del creador: ${skipNormal}%` : ''}
+${avgTime ? `- Tiempo medio de reproducción: ${avgTime} segundos` : ''}
+${duration ? `- Duración total: ${duration} segundos` : ''}
+${p3 ? `- Retención al segundo 3 (hook): ${p3}%` : ''}
+${p10 ? `- Retención al segundo 10 (transición): ${p10}%` : ''}
+${p50 ? `- Retención al 50% del video: ${p50}%` : ''}
+${pfinal ? `- Retención al final: ${pfinal}%` : ''}
+${tieneScreenshot ? '- Se adjunta screenshot de los insights de Instagram con la curva de retención.' : ''}
+
+Analizá estos datos y generá un diagnóstico detallado. Identificá con precisión en qué momento del video la gente abandona y por qué, basándote en la estructura del guión.
+
+Respondé SOLO en JSON válido:
+{
+  "score_general": número del 1 al 10,
+  "veredicto": "una frase directa de qué pasó con este reel",
+  "problema_principal": "hook/transicion/desarrollo/cierre",
+  "segundo_abandono": "en qué momento exacto se va la mayoría de la gente y por qué",
+  "diagnostico": "análisis detallado de 2-3 párrafos: qué falló, por qué la gente se fue, qué señal da la curva",
+  "que_funciono": "qué parte del guión sí funcionó y por qué",
+  "reescritura_seccion": "nombre de la sección a reescribir",
+  "version_original": "el texto original de esa sección (del guión provisto)",
+  "version_mejorada": "reescritura completa de esa sección corregida, lista para grabar",
+  "tips_adicionales": ["tip 1 concreto", "tip 2 concreto", "tip 3 concreto"]
+}`;
+
+  try {
+    const messages = tieneScreenshot ? [
+      { role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: retState.screenshotBase64 } },
+        { type: 'text', text: promptText }
+      ]}
+    ] : [{ role: 'user', content: promptText }];
+
+    const response = await fetch('https://curly-brook-7e7b.mktsocialink.workers.dev/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages })
+    });
+    const data = await response.json();
+    clearInterval(interval);
+    if(data.error) throw new Error(data.error.message);
+    const text = data.content?.[0]?.text || '';
+    const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderRetDiagnostico(parsed);
+  } catch(e) {
+    clearInterval(interval);
+    document.getElementById('ret-loading').style.display = 'none';
+    document.getElementById('ret-result').style.display = 'flex';
+    document.getElementById('ret-result').innerHTML = `<div style="color:#f87171; padding:16px; background:rgba(248,113,113,0.1); border-radius:12px;">Error: ${e.message}</div>`;
+    document.getElementById('btn-ret-back').style.display = 'block';
+  }
+  btn.disabled = false; btn.textContent = '🔍 Analizar y diagnosticar';
+}
+
+function renderRetDiagnostico(d) {
+  document.getElementById('ret-loading').style.display = 'none';
+  const result = document.getElementById('ret-result');
+  result.style.display = 'flex';
+  document.getElementById('btn-ret-back').style.display = 'block';
+
+  const scoreColor = d.score_general >= 7 ? '#34d399' : d.score_general >= 5 ? 'var(--accent)' : '#f87171';
+  const problemaColors = { hook:'#f87171', transicion:'var(--accent3)', desarrollo:'#a78bfa', cierre:'#93c5fd' };
+  const problemaLabels = { hook:'🎣 Hook', transicion:'⚡ Transición', desarrollo:'📝 Desarrollo', cierre:'📣 Cierre/CTA' };
+
+  result.innerHTML = `
+    <!-- Veredicto general -->
+    <div style="background:var(--bg2); border:1px solid var(--border2); border-radius:var(--radius); padding:24px; display:flex; align-items:center; gap:20px;">
+      <div style="text-align:center; min-width:80px;">
+        <div style="font-family:'Syne',sans-serif; font-size:48px; font-weight:800; color:${scoreColor}; line-height:1;">${d.score_general}</div>
+        <div style="font-size:11px; color:var(--text3); margin-top:2px;">/10</div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px;">${d.veredicto}</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:${problemaColors[d.problema_principal]||'#f87171'};">⚠ Problema principal: ${problemaLabels[d.problema_principal]||d.problema_principal}</span>
+        </div>
+        ${d.segundo_abandono ? `<div style="font-size:12px; color:var(--text3); margin-top:6px;">📉 ${d.segundo_abandono}</div>` : ''}
+      </div>
+    </div>
+
+    <!-- Diagnóstico -->
+    <div class="script-section">
+      <div class="script-section-header">
+        <div class="script-section-label">🔍 Diagnóstico detallado</div>
+      </div>
+      <div class="script-section-body problema">${d.diagnostico}</div>
+    </div>
+
+    <!-- Qué funcionó -->
+    ${d.que_funciono ? `<div class="script-section">
+      <div class="script-section-header">
+        <div class="script-section-label">✅ Qué funcionó</div>
+      </div>
+      <div class="script-section-body solucion">${d.que_funciono}</div>
+    </div>` : ''}
+
+    <!-- Reescritura -->
+    <div class="script-section">
+      <div class="script-section-header">
+        <div class="script-section-label">✏️ Reescritura — ${d.reescritura_seccion}</div>
+        <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('ret-rewrite').textContent); showToast('Copiado ✓')">Copiar</button>
+      </div>
+      ${d.version_original ? `<div style="padding:14px 20px; background:rgba(248,113,113,0.06); border-left:3px solid #f87171;">
+        <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#f87171; margin-bottom:6px;">VERSIÓN ORIGINAL</div>
+        <div style="font-size:13px; color:var(--text2); line-height:1.7;">${d.version_original}</div>
+      </div>` : ''}
+      <div style="padding:14px 20px; background:rgba(52,211,153,0.06); border-left:3px solid #34d399;">
+        <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#34d399; margin-bottom:6px;">VERSIÓN MEJORADA — lista para grabar</div>
+        <div style="font-size:14px; color:var(--text); line-height:1.8; font-weight:500;" id="ret-rewrite">${d.version_mejorada}</div>
+      </div>
+    </div>
+
+    <!-- Tips adicionales -->
+    ${d.tips_adicionales?.length ? `<div class="script-section">
+      <div class="script-section-header">
+        <div class="script-section-label">💡 Tips adicionales</div>
+      </div>
+      <div style="padding:16px 20px; display:flex; flex-direction:column; gap:10px;">
+        ${d.tips_adicionales.map((tip,i) => `
+          <div style="display:flex; gap:12px; align-items:flex-start;">
+            <div style="min-width:22px; height:22px; border-radius:50%; background:rgba(232,255,71,0.15); border:1px solid rgba(232,255,71,0.3); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--accent);">${i+1}</div>
+            <div style="font-size:13px; color:var(--text2); line-height:1.6;">${tip}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>` : ''}
+
+    <!-- Acción -->
+    <div style="display:flex; gap:10px;">
+      <button class="copy-all-btn" onclick="copiarDiagnostico()" style="flex:1;">📋 Copiar diagnóstico completo</button>
+      <button class="gen-btn" style="flex:1;" onclick="usarReescrituraEnGenerador('${(d.reescritura_seccion||'').replace(/'/g,"\\'")}', '${(d.version_mejorada||'').replace(/'/g,"\\'").replace(/\n/g,' ')}')">Crear nuevo guión con esto →</button>
+    </div>
+  `;
+}
+
+function copiarDiagnostico() {
+  const result = document.getElementById('ret-result');
+  const veredicto = result.querySelector('[style*="font-size:18px"]')?.textContent || '';
+  const diagnostico = document.getElementById('ret-result').querySelector('.problema')?.textContent || '';
+  const rewrite = document.getElementById('ret-rewrite')?.textContent || '';
+  navigator.clipboard.writeText(`DIAGNÓSTICO DE RETENCIÓN\n\n${veredicto}\n\nDIAGNÓSTICO:\n${diagnostico}\n\nREESCRITURA:\n${rewrite}`);
+  showToast('Diagnóstico copiado ✓');
+}
+
+function usarReescrituraEnGenerador(seccion, texto) {
+  switchPage('generator');
+  setTimeout(() => {
+    showToast('Abrí el generador y creá un nuevo guión con los insights del análisis', '💡');
+  }, 300);
+}
 updateCalendarSelect();
 updateDashboard();
 renderTrackerTable();
@@ -3497,6 +4329,9 @@ document.getElementById('angulo-modal').addEventListener('click', function(e) {
   if(e.target === this) closeAnguloModal();
 });
 document.getElementById('metrica-modal').addEventListener('click', function(e) {
+  if(e.target === this) this.classList.remove('open');
+});
+document.getElementById('ad-row-modal').addEventListener('click', function(e) {
   if(e.target === this) this.classList.remove('open');
 });
 

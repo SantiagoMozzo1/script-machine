@@ -2298,6 +2298,12 @@ function selectFormato(formato, btn) {
   btn.classList.add('selected');
   state.briefing.formato = formato;
   document.getElementById('carrusel-config').style.display = formato === 'carrusel' ? 'block' : 'none';
+  // Update next button text hint based on format
+  const btnNext = document.getElementById('btn-next');
+  if(btnNext && state.currentStep === 1) {
+    btnNext.textContent = (formato === 'carrusel') ? 'Siguiente → (sin elegir tipo)' : 'Siguiente →';
+    setTimeout(() => { if(btnNext.textContent.includes('(sin elegir tipo)')) btnNext.textContent = 'Siguiente →'; }, 3000);
+  }
   updateViralCheck();
 }
 
@@ -2401,19 +2407,28 @@ function toggleTestimonio(val, btn) {
 function nextStep() {
   const s = state.currentStep;
   const isYT = state.briefing.formato === 'youtube';
+  const isCarrusel = state.briefing.formato === 'carrusel';
+  const skipTipo = isYT || isCarrusel;
 
   // Validaciones por paso
   if(s === 1 && !state.briefing.formato) { showToast('Seleccioná el formato', '⚠️'); return; }
-  if(s === 2 && !state.briefing.tipo && !isYT) { showToast('Seleccioná el tipo de contenido', '⚠️'); return; }
+  if(s === 2 && !state.briefing.tipo && !skipTipo) { showToast('Seleccioná el tipo de contenido', '⚠️'); return; }
   if(s === 3) {
     state.briefing.angulo = document.getElementById('angulo-input').value;
     state.briefing.nicho = document.getElementById('nicho-input').value;
-    if(!state.briefing.angulo.trim()) { showToast('Escribí el tema del video', '⚠️'); return; }
+    if(!state.briefing.angulo.trim()) { showToast('Escribí el tema del contenido', '⚠️'); return; }
     if(isYT) {
-      // YouTube: saltar paso 4 y generar directo
       state.briefing.testimonioTexto = '';
       state.briefing.objetivo = 'autoridad';
       state.briefing.plataforma = 'youtube';
+      generateScript();
+      return;
+    }
+    if(isCarrusel) {
+      state.briefing.testimonioTexto = '';
+      state.briefing.objetivo = state.briefing.objetivo || 'autoridad';
+      state.briefing.plataforma = state.briefing.plataforma || 'instagram';
+      state.briefing.tipo = state.briefing.tipo || 'solucion';
       generateScript();
       return;
     }
@@ -2427,20 +2442,20 @@ function nextStep() {
     return;
   }
 
-  // Para YouTube: paso 1 → paso 3 (saltar paso 2)
-  const nextS = (s === 1 && isYT) ? 3 : s + 1;
+  // Para YouTube y Carrusel: paso 1 → paso 3 (saltar paso 2)
+  const nextS = (s === 1 && skipTipo) ? 3 : s + 1;
 
   document.getElementById('step-' + s).style.display = 'none';
   document.getElementById('step-' + nextS).style.display = 'block';
   document.getElementById('dot-' + s).classList.remove('active');
   document.getElementById('dot-' + s).classList.add('done');
-  if(s === 1 && isYT) document.getElementById('dot-2').classList.add('done');
+  if(s === 1 && skipTipo) document.getElementById('dot-2').classList.add('done');
   document.getElementById('dot-' + nextS).classList.add('active');
   state.currentStep = nextS;
   document.getElementById('btn-back').style.display = 'block';
 
   // Cambiar texto del botón
-  if(nextS === 3 && isYT) {
+  if(nextS === 3 && skipTipo) {
     document.getElementById('btn-next').textContent = '✨ Generar guión';
     document.getElementById('viral-check').style.display = 'none';
   } else if(nextS === 4) {
@@ -2455,15 +2470,17 @@ function nextStep() {
 function prevStep() {
   const s = state.currentStep;
   const isYT = state.briefing.formato === 'youtube';
+  const isCarrusel = state.briefing.formato === 'carrusel';
+  const skipTipo = isYT || isCarrusel;
   if(s === 1) return;
 
-  // Para YouTube en paso 3: volver a paso 1 (saltar paso 2)
-  const prevS = (s === 3 && isYT) ? 1 : s - 1;
+  // Para YouTube/Carrusel en paso 3: volver a paso 1
+  const prevS = (s === 3 && skipTipo) ? 1 : s - 1;
 
   document.getElementById('step-' + s).style.display = 'none';
   document.getElementById('step-' + prevS).style.display = 'block';
   document.getElementById('dot-' + s).classList.remove('active');
-  if(s === 3 && isYT) {
+  if(s === 3 && skipTipo) {
     document.getElementById('dot-2').classList.remove('done');
     document.getElementById('dot-3').classList.remove('done');
   }
@@ -3732,15 +3749,24 @@ function closeAnguloModal() {
 function usarAngulo(id) {
   const a = state.angulos.find(a => a.id === id);
   if(!a) return;
+
+  // Reset generator completely first
+  nuevoGuion();
+
   switchPage('generator');
   setTimeout(() => {
-    document.getElementById('angulo-input').value = a.tema;
+    // Pre-load the angulo text in step 3
+    const anguloInput = document.getElementById('angulo-input');
+    if(anguloInput) anguloInput.value = a.tema;
+
+    // Pre-select tipo in step 2 if matches
     if(a.tipo) {
       const tipoBtn = document.querySelector(`#step-2 .option-btn[onclick*="'${a.tipo}'"]`);
-      if(tipoBtn) { selectOption('tipo', a.tipo, tipoBtn); }
+      if(tipoBtn) selectOption('tipo', a.tipo, tipoBtn);
     }
-    showToast('Ángulo cargado en el generador ✓', '🎯');
-  }, 200);
+
+    showToast('Ángulo cargado — elegí el formato y continuá ✓', '🎯');
+  }, 300);
 }
 
 function savePerfil() {

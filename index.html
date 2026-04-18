@@ -1375,45 +1375,82 @@ input[type="range"]::-webkit-slider-thumb {
 
         <!-- STEP 1: Formato -->
         <div id="step-1">
-          <div class="field-label">Formato <span class="required">*</span></div>
-          <div class="options-grid">
-            <div class="option-btn" onclick="selectFormato('reel-camara',this)">🎥 Reel a cámara</div>
-            <div class="option-btn" onclick="selectFormato('reel-qa',this)">❓ Reel Q&A</div>
-            <div class="option-btn" onclick="selectFormato('reel-pantalla',this)">📱 Pantalla dividida</div>
-            <div class="option-btn" onclick="selectFormato('carrusel',this)">📑 Carrusel</div>
-            <div class="option-btn" onclick="selectFormato('reel-ranking',this)">🏆 Reel Ranking / Top</div>
-            <div class="option-btn" onclick="selectFormato('youtube',this)">▶️ YouTube (video largo)</div>
-          </div>
-
-          <!-- Carrusel: cantidad de slides -->
-          <div id="carrusel-config" style="display:none; margin-top:14px; padding:14px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
-            <div class="field-label">¿Cuántos slides querés? <span class="required">*</span></div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <div class="option-btn" onclick="selectSlides(5,this)">5 slides</div>
-              <div class="option-btn" onclick="selectSlides(7,this)">7 slides</div>
-              <div class="option-btn selected" onclick="selectSlides(10,this)">10 slides</div>
-              <div class="option-btn" onclick="selectSlides(15,this)">15 slides</div>
+          <div class="field-label">¿Para qué plataforma es el contenido? <span class="required">*</span></div>
+          <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <div class="option-btn selected" id="plat-short" onclick="selectPlataformaFlujo('short',this)" style="flex:1; padding:14px; text-align:center;">
+              <div style="font-size:18px; margin-bottom:4px;">📱</div>
+              <div style="font-weight:700; font-size:13px;">Reel / Carrusel</div>
+              <div style="font-size:10px; color:var(--text3); margin-top:2px;">Instagram · TikTok · Shorts</div>
             </div>
-            <div style="font-size:11px; color:var(--text3); margin-top:8px;">Incluye slide de portada y slide de CTA. Los slides de contenido son el total menos 2.</div>
+            <div class="option-btn" id="plat-youtube" onclick="selectPlataformaFlujo('youtube',this)" style="flex:1; padding:14px; text-align:center;">
+              <div style="font-size:18px; margin-bottom:4px;">▶️</div>
+              <div style="font-weight:700; font-size:13px;">YouTube Largo</div>
+              <div style="font-size:10px; color:var(--text3); margin-top:2px;">Videos de 5 a 20 minutos</div>
+            </div>
           </div>
 
-          <!-- YouTube: duración -->
-          <div id="youtube-config" style="display:none; margin-top:14px; padding:14px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
-            <div class="field-label">¿Cuántos minutos querés? <span class="required">*</span></div>
+          <!-- FLUJO SHORT: formatos de reel -->
+          <div id="flujo-short">
+            <div class="field-label">Formato <span class="required">*</span></div>
+            <div class="options-grid">
+              <div class="option-btn" onclick="selectFormato('reel-camara',this)">🎥 Reel a cámara</div>
+              <div class="option-btn" onclick="selectFormato('reel-qa',this)">❓ Reel Q&A</div>
+              <div class="option-btn" onclick="selectFormato('reel-pantalla',this)">📱 Pantalla dividida</div>
+              <div class="option-btn" onclick="selectFormato('carrusel',this)">📑 Carrusel</div>
+              <div class="option-btn" style="grid-column:1/-1;" onclick="selectFormato('reel-ranking',this)">🏆 Reel Ranking / Top</div>
+            </div>
+
+            <!-- Carrusel: cantidad de slides -->
+            <div id="carrusel-config" style="display:none; margin-top:14px; padding:14px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+              <div class="field-label">¿Cuántos slides querés? <span class="required">*</span></div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <div class="option-btn" onclick="selectSlides(5,this)">5 slides</div>
+                <div class="option-btn" onclick="selectSlides(7,this)">7 slides</div>
+                <div class="option-btn selected" onclick="selectSlides(10,this)">10 slides</div>
+                <div class="option-btn" onclick="selectSlides(15,this)">15 slides</div>
+              </div>
+              <div style="font-size:11px; color:var(--text3); margin-top:8px;">Incluye portada y CTA. Los slides de contenido son el total menos 2.</div>
+            </div>
+          </div>
+
+          <!-- FLUJO YOUTUBE -->
+          <div id="flujo-youtube" style="display:none;">
+            <div class="field-label">Duración del video <span class="required">*</span></div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <div class="option-btn" onclick="selectYTDuracion(5,this)">5 min</div>
               <div class="option-btn selected" onclick="selectYTDuracion(10,this)">10 min</div>
               <div class="option-btn" onclick="selectYTDuracion(15,this)">15 min</div>
               <div class="option-btn" onclick="selectYTDuracion(20,this)">20 min</div>
             </div>
-            <div class="field-label mt16">Estilo de video</div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <div class="option-btn selected" id="yt-estilo-educativo" onclick="selectYTEstilo('educativo',this)">📚 Educativo / Tutorial</div>
-              <div class="option-btn" id="yt-estilo-historia" onclick="selectYTEstilo('historia',this)">🎬 Historia / Storytelling</div>
-              <div class="option-btn" id="yt-estilo-lista" onclick="selectYTEstilo('lista',this)">📋 Lista / Ranking</div>
-              <div class="option-btn" id="yt-estilo-caso" onclick="selectYTEstilo('caso',this)">⭐ Caso de estudio</div>
+
+            <div class="field-label mt16">Estructura del video <span class="required">*</span></div>
+            <div style="font-size:11px; color:var(--text3); margin-bottom:8px;">Estructuras extraídas de la Fórmula 100K para YouTube. Cada una tiene un propósito diferente.</div>
+            <div style="display:flex; flex-direction:column; gap:8px;" id="yt-estructura-options">
+              <div class="option-btn selected" id="yt-est-viral" onclick="selectYTEstructura('viral',this)" style="text-align:left; padding:12px 14px;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:2px;">🔥 Video Viral (Entretenimiento / Challenge)</div>
+                <div style="font-size:11px; color:var(--text3);">Hook → Presentación del reto → Evolución con micro-hooks → Clímax → Resolución + CTA</div>
+              </div>
+              <div class="option-btn" id="yt-est-educativo" onclick="selectYTEstructura('educativo',this)" style="text-align:left; padding:12px 14px;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:2px;">📚 Educativo / Tutorial</div>
+                <div style="font-size:11px; color:var(--text3);">Hook provocador → Problema o mito → Desarrollo con datos → Solución paso a paso → Resumen + CTA</div>
+              </div>
+              <div class="option-btn" id="yt-est-venta" onclick="selectYTEstructura('venta',this)" style="text-align:left; padding:12px 14px;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:2px;">💰 Venta y Conversión</div>
+                <div style="font-size:11px; color:var(--text3);">Hook de autoridad → Historia personal + prueba social → Sistema/método → Escasez/urgencia → CTA directo</div>
+              </div>
+              <div class="option-btn" id="yt-est-storytelling" onclick="selectYTEstructura('storytelling',this)" style="text-align:left; padding:12px 14px;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:2px;">🎬 Storytelling / Historia Personal</div>
+                <div style="font-size:11px; color:var(--text3);">Intro intrigante → Contexto del punto A → Conflicto → Clímax emocional → Reflexión + CTA</div>
+              </div>
+              <div class="option-btn" id="yt-est-documental" onclick="selectYTEstructura('documental',this)" style="text-align:left; padding:12px 14px;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:2px;">🎥 Documental / Deep Dive</div>
+                <div style="font-size:11px; color:var(--text3);">Hook misterioso → Contexto histórico → Evidencia/datos → Revelación → Reflexión final + CTA</div>
+              </div>
             </div>
-            <div style="font-size:11px; color:var(--text3); margin-top:8px;">Para YouTube el guión incluye intro, secciones con timestamps, momentos de retención y outro con CTA.</div>
+
+            <div style="margin-top:12px; padding:12px 14px; background:var(--bg3); border-radius:var(--radius-sm); border:1px solid var(--border);">
+              <div style="font-size:11px; color:var(--text3);">💡 El guión incluye <strong style="color:var(--text2);">timestamps</strong>, <strong style="color:var(--text2);">micro-hooks cada 30-45 seg</strong> para mantener retención, indicaciones de <strong style="color:var(--text2);">[B-ROLL]</strong> y <strong style="color:var(--text2);">[MOSTRAR EN PANTALLA]</strong>, y gancho de persistencia al final de la intro.</div>
+            </div>
           </div>
         </div>
 
@@ -1428,10 +1465,10 @@ input[type="range"]::-webkit-slider-thumb {
           </div>
         </div>
 
-        <!-- STEP 3: Ángulo + Objetivo -->
+        <!-- STEP 3: Ángulo + Nicho -->
         <div id="step-3" style="display:none;">
-          <div class="field-label">¿Sobre qué tema específico es el contenido? <span class="required">*</span></div>
-          <div style="font-size:11px; color:var(--text3); margin-bottom:6px;">El ángulo es el tema que tocás — no el formato. Tiene que ser un problema o insight específico de tu cliente ideal.</div>
+          <div class="field-label" id="angulo-label">¿Sobre qué tema específico es el contenido? <span class="required">*</span></div>
+          <div style="font-size:11px; color:var(--text3); margin-bottom:6px;" id="angulo-hint">El ángulo es el tema que tocás — no el formato. Tiene que ser un problema o insight específico de tu cliente ideal.</div>
           <textarea class="text-input" id="angulo-input" placeholder="Ej: Por qué los coaches no cierran ventas aunque tengan buen contenido&#10;Ej: Es imposible cobrar $500 en Latam — mito o realidad&#10;Ej: El error que cometen los entrenadores al hacer reels" style="min-height:80px;"></textarea>
           <div class="field-label mt16">¿A quién le hablás en este contenido? <span style="font-size:10px; color:var(--text3);">(tu cliente ideal)</span></div>
           <div style="font-size:11px; color:var(--text3); margin-bottom:6px;">Describí a la persona que va a ver este video, no tu industria en general.</div>
@@ -2164,7 +2201,7 @@ input[type="range"]::-webkit-slider-thumb {
 const state = {
   currentPage: 'dashboard',
   currentStep: 1,
-  briefing: { formato: null, tipo: null, angulo: '', nicho: '', objetivo: null, plataforma: null, testimonio: true, testimonioTexto: '', slides: 10, ytDuracion: 10, ytEstilo: 'educativo', estructura: null },
+  briefing: { formato: null, tipo: null, angulo: '', nicho: '', objetivo: null, plataforma: null, testimonio: true, testimonioTexto: '', slides: 10, ytDuracion: 10, ytEstilo: 'educativo', ytEstructura: 'viral', estructura: null },
   script: { hooks: [], selectedHook: 0, problema: '', solucion: '', prueba: '', cta: '', produccion: '' },
   scripts: JSON.parse(localStorage.getItem('sm_scripts') || '[]'),
   calendar: JSON.parse(localStorage.getItem('sm_calendar') || '[]'),
@@ -2215,14 +2252,52 @@ function selectOption(field, value, btn) {
   updateViralCheck();
 }
 
+function selectPlataformaFlujo(flujo, btn) {
+  document.getElementById('plat-short').classList.toggle('selected', flujo === 'short');
+  document.getElementById('plat-youtube').classList.toggle('selected', flujo === 'youtube');
+  document.getElementById('flujo-short').style.display = flujo === 'short' ? 'block' : 'none';
+  document.getElementById('flujo-youtube').style.display = flujo === 'youtube' ? 'block' : 'none';
+  if(flujo === 'youtube') {
+    state.briefing.formato = 'youtube';
+    state.briefing.ytEstructura = 'viral';
+    state.briefing.ytDuracion = 10;
+    state.briefing.tipo = 'youtube';
+    // Update step 3 labels for YouTube
+    const lbl = document.getElementById('angulo-label');
+    const hint = document.getElementById('angulo-hint');
+    const inp = document.getElementById('angulo-input');
+    if(lbl) lbl.innerHTML = '¿De qué trata el video? <span style="color:var(--accent);">*</span>';
+    if(hint) hint.textContent = 'El tema central del video. Sé específico — un buen título de YouTube suele revelar el tema exacto.';
+    if(inp) inp.placeholder = 'Ej: Cómo conseguí mis primeros 10 clientes sin pagar publicidad\nEj: La verdad sobre monetizar en redes que nadie te dice\nEj: De 0 a $5k al mes con contenido orgánico — mi proceso exacto';
+  } else {
+    state.briefing.formato = null;
+    state.briefing.ytEstructura = null;
+    state.briefing.tipo = null;
+    // Restore step 3 labels for reels
+    const lbl = document.getElementById('angulo-label');
+    const hint = document.getElementById('angulo-hint');
+    const inp = document.getElementById('angulo-input');
+    if(lbl) lbl.innerHTML = '¿Sobre qué tema específico es el contenido? <span style="color:var(--accent);">*</span>';
+    if(hint) hint.textContent = 'El ángulo es el tema que tocás — no el formato. Tiene que ser un problema o insight específico de tu cliente ideal.';
+    if(inp) inp.placeholder = 'Ej: Por qué los coaches no cierran ventas aunque tengan buen contenido\nEj: Es imposible cobrar $500 en Latam — mito o realidad';
+  }
+  updateViralCheck();
+}
+
+function selectYTEstructura(est, btn) {
+  ['viral','educativo','venta','storytelling','documental'].forEach(e => {
+    const el = document.getElementById('yt-est-' + e);
+    if(el) el.classList.remove('selected');
+  });
+  btn.classList.add('selected');
+  state.briefing.ytEstructura = est;
+}
+
 function selectFormato(formato, btn) {
-  // Deselect all format buttons
-  document.querySelectorAll('#step-1 .options-grid .option-btn').forEach(b => b.classList.remove('selected','selected-purple','selected-orange'));
+  document.querySelectorAll('#flujo-short .options-grid .option-btn').forEach(b => b.classList.remove('selected','selected-purple','selected-orange'));
   btn.classList.add('selected');
   state.briefing.formato = formato;
-  // Show/hide config panels
   document.getElementById('carrusel-config').style.display = formato === 'carrusel' ? 'block' : 'none';
-  document.getElementById('youtube-config').style.display = formato === 'youtube' ? 'block' : 'none';
   updateViralCheck();
 }
 
@@ -2233,7 +2308,7 @@ function selectSlides(n, btn) {
 }
 
 function selectYTDuracion(n, btn) {
-  document.querySelectorAll('#youtube-config .option-btn:not([id^="yt-estilo"])').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('#flujo-youtube .option-btn:not([id^="yt-est"])').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   state.briefing.ytDuracion = n;
 }
@@ -2325,45 +2400,78 @@ function toggleTestimonio(val, btn) {
 
 function nextStep() {
   const s = state.currentStep;
-  if(s === 1 && !state.briefing.formato) { showToast('Selecciona un formato', '⚠️'); return; }
-  if(s === 2 && !state.briefing.tipo) { showToast('Selecciona el tipo de contenido', '⚠️'); return; }
-  if(s === 3 && !state.briefing.angulo.trim()) {
+  const isYT = state.briefing.formato === 'youtube';
+
+  // Validaciones por paso
+  if(s === 1 && !state.briefing.formato) { showToast('Seleccioná el formato', '⚠️'); return; }
+  if(s === 2 && !state.briefing.tipo && !isYT) { showToast('Seleccioná el tipo de contenido', '⚠️'); return; }
+  if(s === 3) {
     state.briefing.angulo = document.getElementById('angulo-input').value;
-    if(!state.briefing.angulo.trim()) { showToast('Escribe el ángulo del contenido', '⚠️'); return; }
+    state.briefing.nicho = document.getElementById('nicho-input').value;
+    if(!state.briefing.angulo.trim()) { showToast('Escribí el tema del video', '⚠️'); return; }
+    if(isYT) {
+      // YouTube: saltar paso 4 y generar directo
+      state.briefing.testimonioTexto = '';
+      state.briefing.objetivo = 'autoridad';
+      state.briefing.plataforma = 'youtube';
+      generateScript();
+      return;
+    }
   }
   if(s === 4) {
     state.briefing.angulo = document.getElementById('angulo-input').value;
     state.briefing.nicho = document.getElementById('nicho-input').value;
     state.briefing.testimonioTexto = document.getElementById('testimonio-input')?.value || '';
-    if(!state.briefing.objetivo) { showToast('Selecciona el objetivo', '⚠️'); return; }
+    if(!state.briefing.objetivo) { showToast('Seleccioná el objetivo', '⚠️'); return; }
     generateScript();
     return;
   }
+
+  // Para YouTube: paso 1 → paso 3 (saltar paso 2)
+  const nextS = (s === 1 && isYT) ? 3 : s + 1;
+
   document.getElementById('step-' + s).style.display = 'none';
-  document.getElementById('step-' + (s+1)).style.display = 'block';
+  document.getElementById('step-' + nextS).style.display = 'block';
   document.getElementById('dot-' + s).classList.remove('active');
   document.getElementById('dot-' + s).classList.add('done');
-  document.getElementById('dot-' + (s+1)).classList.add('active');
-  state.currentStep = s + 1;
+  if(s === 1 && isYT) document.getElementById('dot-2').classList.add('done');
+  document.getElementById('dot-' + nextS).classList.add('active');
+  state.currentStep = nextS;
   document.getElementById('btn-back').style.display = 'block';
-  if(s === 3) {
+
+  // Cambiar texto del botón
+  if(nextS === 3 && isYT) {
+    document.getElementById('btn-next').textContent = '✨ Generar guión';
+    document.getElementById('viral-check').style.display = 'none';
+  } else if(nextS === 4) {
     document.getElementById('btn-next').textContent = '✨ Generar guión';
     document.getElementById('viral-check').style.display = 'block';
   } else {
     document.getElementById('btn-next').textContent = 'Siguiente →';
+    document.getElementById('viral-check').style.display = 'none';
   }
 }
 
 function prevStep() {
   const s = state.currentStep;
+  const isYT = state.briefing.formato === 'youtube';
   if(s === 1) return;
+
+  // Para YouTube en paso 3: volver a paso 1 (saltar paso 2)
+  const prevS = (s === 3 && isYT) ? 1 : s - 1;
+
   document.getElementById('step-' + s).style.display = 'none';
-  document.getElementById('step-' + (s-1)).style.display = 'block';
+  document.getElementById('step-' + prevS).style.display = 'block';
   document.getElementById('dot-' + s).classList.remove('active');
-  document.getElementById('dot-' + (s-1)).classList.remove('done');
-  document.getElementById('dot-' + (s-1)).classList.add('active');
-  state.currentStep = s - 1;
-  if(s-1 === 1) document.getElementById('btn-back').style.display = 'none';
+  if(s === 3 && isYT) {
+    document.getElementById('dot-2').classList.remove('done');
+    document.getElementById('dot-3').classList.remove('done');
+  }
+  document.getElementById('dot-' + prevS).classList.remove('done');
+  document.getElementById('dot-' + prevS).classList.add('active');
+  state.currentStep = prevS;
+
+  if(prevS === 1) document.getElementById('btn-back').style.display = 'none';
   document.getElementById('btn-next').textContent = 'Siguiente →';
   document.getElementById('viral-check').style.display = 'none';
 }
@@ -2498,17 +2606,53 @@ ${b.formato === 'carrusel' ? `CARRUSEL DE ${b.slides} SLIDES:
 - Slides 2 a ${b.slides - 1}: UN SOLO concepto/punto por slide. Título máx 7 palabras + 1-2 líneas de desarrollo. Cada slide tiene que tener valor por sí solo.
 - Slide ${b.slides} (CTA): Llamado a la acción claro con el entregable específico.
 IMPORTANTE: Generá el contenido de TODOS los ${b.slides} slides, no solo la estructura. Cada slide con su título y texto completo.` : ''}
-${b.formato === 'youtube' ? `VIDEO DE YOUTUBE DE ${b.ytDuracion} MINUTOS — FORMATO LARGO:
-Estilo: ${b.ytEstilo === 'educativo' ? 'Educativo/Tutorial — enseñás paso a paso' : b.ytEstilo === 'historia' ? 'Storytelling — contás una historia con lección' : b.ytEstilo === 'lista' ? 'Lista/Ranking — formato de puntos numerados' : 'Caso de estudio — mostrás un resultado real con el proceso'}
+${b.formato === 'youtube' ? (() => {
+    const ytStructures = {
+      viral: `ESTRUCTURA: VIDEO VIRAL (Entretenimiento / Challenge / Stunts)
+Primeros 5-10 seg: Hook inicial impactante con corte rápido. Voz en off que presenta el reto o situación con tensión inmediata.
+Min 0:10-0:30: Presentación del reto o conflicto. Explicar reglas/contexto, generar expectativa.
+Min 0:30 hasta 70% del video: Evolución con MICRO-HOOKS cada 30-45 segundos. Cada micro-hook es una interrupción que despierta curiosidad: "Pero aquí viene lo más loco...", "Lo que pasó después no tiene sentido...", "Espera a ver esto...". Mostrar dificultades, reacciones, momentos de tensión. NUNCA dejes que el video fluya más de 45 seg sin un gancho.
+70-90% del video: CLÍMAX. El momento más tenso. Si es un reto, los últimos competidores. Si es una historia, el punto de quiebre.
+Últimos 10%: Resolución + CTA de suscripción y próximo video.`,
+      educativo: `ESTRUCTURA: VIDEO EDUCATIVO / TUTORIAL (Ali Abdaal, Veritasium style)
+Primeros 5-10 seg: Hook provocador que desafía una creencia común o presenta un dato sorprendente. Ej: "Todos dicen que X... pero y si te dijera que es una mentira?"
+Min 0:10-1:00: Contexto del problema. Por qué esto importa. Quién se va a beneficiar de verlo completo. GANCHO DE PERSISTENCIA: prometer una revelación al final.
+Min 1:00-70% del video: Desarrollo con datos, ejemplos y explicaciones. Incluir MICRO-HOOKS cada 45 seg: preguntas retóricas, datos sorprendentes, "pero aquí está la parte que nadie menciona...".
+70-90%: La solución o revelación principal. El "aha moment" que prometiste.
+Últimos 10%: Resumen de puntos clave + CTA doble (suscribir + recurso gratuito en descripción).`,
+      venta: `ESTRUCTURA: VIDEO DE VENTA Y CONVERSIÓN (Alex Hormozi, Dan Lok style)
+Primeros 5 seg: Hook de autoridad con resultado concreto. "Hace X tiempo [situación difícil]... hoy [resultado impactante]. En este video te muestro exactamente cómo."
+Min 1-2: Historia personal + prueba social. Errores cometidos. Momento de descubrimiento del método. Mostrar testimonios de clientes con resultados concretos.
+Min 2-70%: Explicación del sistema o método. Los 3 pasos o pilares clave. Desglose con ejemplos visuales. MICRO-HOOKS: "Pero esto solo funciona si también hacés lo siguiente..."
+70-85%: Escasez y urgencia real. Por qué actuar ahora. Qué pasa si no actúan.
+Últimos 15%: Call to Action DIRECTO y específico. Enlace en descripción, cómo contactar, qué pasa al dar el próximo paso.`,
+      storytelling: `ESTRUCTURA: VIDEO STORYTELLING / HISTORIA PERSONAL
+Primeros 10 seg: Introducción intrigante con imagen del resultado o situación extrema. Una frase que enganche sin revelar el final.
+Min 0:10-1:30: Contexto: el punto A. La situación inicial con dificultades reales. Humanizar al protagonista. GANCHO DE PERSISTENCIA: "Pero lo que pasó en el minuto X cambió todo..."
+Min 1:30-70%: Construcción del conflicto. Momentos de tensión creciente. MICRO-HOOKS narrativos: giros inesperados, nuevas complicaciones, emociones intensas.
+70-85%: Clímax emocional. El momento que cambió todo.
+Últimos 15%: Cierre con reflexión y lección aplicable. CTA suave: próximo video relacionado o recurso.`,
+      documental: `ESTRUCTURA: DOCUMENTAL / DEEP DIVE / INVESTIGACIÓN
+Primeros 10 seg: Hook misterioso. Una pregunta o afirmación que la mayoría desconoce. Crear la sensación de "necesito saber esto."
+Min 0:10-1:30: Contexto e historia. Por qué este tema importa. Cuándo y cómo surgió. GANCHO DE PERSISTENCIA: revelar que hay algo impactante al final.
+Min 1:30-70%: Desarrollo con evidencia, datos, testimonios de expertos. Estructurar como una investigación. MICRO-HOOKS: nuevas revelaciones parciales que alimentan la curiosidad.
+70-85%: La revelación principal o teoría final. El dato más sorprendente guardado para el final.
+Últimos 15%: Reflexión o implicaciones. CTA invitando a debatir en comentarios + próximo video.`
+    };
+    const ytStruct = ytStructures[b.ytEstructura] || ytStructures.educativo;
+  return `VIDEO DE YOUTUBE — ${b.ytDuracion} MINUTOS (~${b.ytDuracion * 120} palabras en guión)
 
-ESTRUCTURA PARA ${b.ytDuracion} MINUTOS (~${b.ytDuracion * 130} palabras):
-1. INTRO (0:00-0:30): Hook de los primeros 15 segundos + promesa del video + por qué vale la pena verlo completo
-2. CONTEXTO (0:30-1:30): Por qué este tema importa, quién es el video
-3. DESARROLLO: ${b.ytDuracion <= 7 ? '2-3 secciones principales' : b.ytDuracion <= 12 ? '3-4 secciones principales' : '4-5 secciones principales'} con timestamps estimados
-4. MOMENTOS DE RETENCIÓN: En cada sección, incluí un "pattern interrupt" para mantener atención (pregunta, dato sorprendente, promesa de lo que viene)
-5. OUTRO (último minuto): Resumen de los puntos clave + CTA doble (suscribir + recurso gratuito)
+${ytStruct}
 
-El guión tiene que estar escrito para ser LEÍDO EN CÁMARA. Incluí indicaciones de [PAUSA], [MOSTRAR EN PANTALLA: X], [B-ROLL: X] donde corresponda.` : ''}
+REGLAS GENERALES:
+- Micro-hooks cada 30-45 segundos: "Pero aquí viene lo más loco...", "Espera a ver lo que sigue...", "Esto es lo que nadie menciona..."
+- Indicaciones de producción inline: [B-ROLL: X], [MOSTRAR: X], [PAUSA]
+- Guión listo para LEER EN CÁMARA
+- Título sugerido optimizado para YouTube (clickeable, genera curiosidad)
+${b.ytDuracion >= 15 ? '- IMPORTANTE: Sé conciso en cada sección. Priorizá calidad sobre cantidad de palabras.' : ''}
+
+`;
+  })() : ''}
 ${b.formato === 'reel-ranking' ? 'RANKING: Empezá anunciando el total ("Los 3 errores..."). Contá de menor a mayor impacto. El #1 al final, tiene que ser el más sorprendente. 30-45 segundos máximo.' : ''}
 ${b.formato === 'reel-qa' ? `Q&A: Para cada hook generá una pregunta ficticia de un seguidor real que dispara exactamente el ángulo del contenido. La pregunta tiene que sonar auténtica, específica, con un dato concreto (ej: "tengo 800 seguidores y publico todos los días pero no vendo nada, ¿qué estoy haciendo mal?"). El verbal del hook es la respuesta directa a esa pregunta en los primeros 3 segundos. Estructura: pregunta en pantalla → respuesta directa → desarrollo del problema → solución → CTA.` : ''}
 ${b.formato === 'reel-pantalla' ? `PANTALLA DIVIDIDA: Para cada hook especificá exactamente qué aparece en la pantalla izquierda (la creencia incorrecta, el error, el antes) y qué aparece en la pantalla derecha (la realidad, la solución, el después). Tiene que ser texto corto y contrastante — máx 5 palabras por lado. El contraste visual ES el gancho principal.` : ''}
@@ -2530,10 +2674,11 @@ Respondé ÚNICAMENTE en JSON válido con esta estructura:
     {"num": 2, "tipo": "contenido", "titulo": "título del punto", "texto": "desarrollo del punto en 1-2 líneas"},
     ...hasta slide ${b.slides} con "tipo": "cta"
   ],` : ''}
-  ${b.formato === 'youtube' ? `"secciones": [
-    {"timestamp": "0:00", "titulo": "INTRO", "guion": "texto completo de la intro listo para leer en cámara"},
-    {"timestamp": "0:30", "titulo": "nombre de la sección", "guion": "texto completo..."},
-    ...
+  ${b.formato === 'youtube' ? `"titulo_video": "título optimizado para YouTube con alta probabilidad de clic",
+  "secciones": [
+    {"timestamp": "0:00", "titulo": "HOOK / INTRO", "guion": "texto completo listo para leer en cámara con indicaciones de producción"},
+    {"timestamp": "0:30", "titulo": "nombre de la sección", "guion": "texto completo con micro-hooks y [B-ROLL: X] donde corresponda"},
+    ...continuar hasta cubrir los ${b.ytDuracion} minutos
   ],` : ''}
   "problema": "${b.formato === 'youtube' ? 'contexto/problema del video en 2-3 oraciones' : '2-3 oraciones cortas, lenguaje conversacional'}",
   "solucion": "${b.formato === 'youtube' ? 'promesa principal del video' : '1-2 oraciones, el qué nunca el cómo'}",
@@ -2545,10 +2690,10 @@ Respondé ÚNICAMENTE en JSON válido con esta estructura:
   try {
     const response = await fetch('https://curly-brook-7e7b.mktsocialink.workers.dev/', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json',  },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: (b.formato === 'youtube' ? 4000 : b.formato === 'carrusel' ? 3000 : 2000),
+        max_tokens: (b.formato === 'youtube' ? 8000 : b.formato === 'carrusel' ? 3000 : 2000),
         messages: [{ role: 'user', content: prompt }]
       })
     });
@@ -2562,15 +2707,81 @@ Respondé ÚNICAMENTE en JSON válido con esta estructura:
     }
     const text = data.content?.[0]?.text || '';
     const clean = text.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
+
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch(jsonErr) {
+      // JSON truncado — intentar reparar
+      parsed = repairTruncatedJSON(clean, b.formato);
+      if(!parsed) {
+        document.getElementById('output-loading').style.display = 'none';
+        document.getElementById('output-empty').style.display = 'flex';
+        document.getElementById('output-empty').innerHTML = `
+          <div class="empty-icon">⚠️</div>
+          <div class="empty-title">El guión se cortó antes de terminar</div>
+          <div class="text-sm" style="color:var(--text2); margin-top:8px;">El video es muy largo para generar de una vez. Probá con una duración más corta (5-10 min) o reducí la extensión del guión.</div>
+          <button class="gen-btn" style="width:auto; padding:10px 24px; margin-top:16px; font-size:13px;" onclick="retryYTShorter()">🔄 Reintentar con guión más corto</button>`;
+        return;
+      }
+    }
+
     state.script = { ...parsed, selectedHook: 0 };
     renderScript();
   } catch(err) {
     clearInterval(interval);
     document.getElementById('output-loading').style.display = 'none';
     document.getElementById('output-empty').style.display = 'flex';
-    document.getElementById('output-empty').innerHTML = `<div class="empty-icon">⚠️</div><div class="empty-title">No se pudo conectar</div><div class="text-sm" style="color:#f87171;">${err.message}</div><div class="text-sm mt8">Revisá la consola del navegador (F12) para más detalles</div>`;
+    document.getElementById('output-empty').innerHTML = `<div class="empty-icon">⚠️</div><div class="empty-title">No se pudo conectar</div><div class="text-sm" style="color:#f87171;">${err.message}</div>`;
   }
+}
+
+function repairTruncatedJSON(text, formato) {
+  try {
+    // Try to find and extract partial valid JSON
+    const start = text.indexOf('{');
+    if(start === -1) return null;
+    let partial = text.substring(start);
+
+    // For YouTube: extract secciones that were completed
+    if(formato === 'youtube') {
+      const secMatch = partial.match(/"secciones"\s*:\s*\[([\s\S]*?)(?:\]|$)/);
+      if(secMatch) {
+        // Find complete section objects
+        const secText = secMatch[1];
+        const complete = [];
+        const secRegex = /\{[^{}]*"timestamp"[^{}]*"titulo"[^{}]*"guion"[^{}]*\}/g;
+        let m;
+        while((m = secRegex.exec(secText)) !== null) {
+          try { complete.push(JSON.parse(m[0])); } catch(e) {}
+        }
+        if(complete.length > 0) {
+          const titleMatch = partial.match(/"titulo_video"\s*:\s*"([^"]+)"/);
+          return {
+            titulo_video: titleMatch ? titleMatch[1] : 'Video generado',
+            secciones: complete,
+            hooks: [{ num:1, tipo:'Hook', verbal: complete[0]?.guion?.substring(0,80) || '', textual: 'Ver video completo' }],
+            problema: '', solucion: '', prueba: '', cta: '', produccion: ''
+          };
+        }
+      }
+      return null;
+    }
+
+    // For other formats: try adding closing brackets
+    const attempts = [partial + '"}]}', partial + '"}],"cta":"","produccion":""}', partial + '..."}]}'];
+    for(const attempt of attempts) {
+      try { return JSON.parse(attempt); } catch(e) {}
+    }
+    return null;
+  } catch(e) { return null; }
+}
+
+async function retryYTShorter() {
+  // Force 5 min and regenerate
+  state.briefing.ytDuracion = 5;
+  document.getElementById('output-empty').style.display = 'none';
+  generateScript();
 }
 
 function buildFallbackScript(b) {
@@ -2673,15 +2884,19 @@ function renderScript() {
         <div class="script-section-label">▶️ Guión de YouTube — ${b.ytDuracion} min</div>
         <button class="copy-btn" onclick="copiarYoutube()">Copiar todo</button>
       </div>
+      ${s.titulo_video ? `<div style="padding:14px 20px; background:rgba(232,255,71,0.06); border-bottom:1px solid var(--border);">
+        <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:4px;">💡 Título sugerido para el video</div>
+        <div style="font-size:15px; font-weight:700; color:var(--text);">${s.titulo_video}</div>
+      </div>` : ''}
       <div style="padding:16px; display:flex; flex-direction:column; gap:12px;">
         ${s.secciones.map((sec, i) => `
           <div style="background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden;">
             <div style="padding:10px 14px; background:var(--bg4); display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border);">
               <span style="font-size:11px; font-weight:700; color:var(--accent); font-family:'Syne',sans-serif;">${sec.timestamp}</span>
               <span style="font-size:12px; font-weight:700; color:var(--text); text-transform:uppercase; letter-spacing:0.5px;">${sec.titulo}</span>
-              <button class="copy-btn" style="margin-left:auto; font-size:10px;" onclick="navigator.clipboard.writeText(this.closest('.script-section').querySelectorAll('[data-guion]')[${i}]?.textContent||''); showToast('Copiado ✓')">Copiar</button>
+              <button class="copy-btn" style="margin-left:auto; font-size:10px;" onclick="navigator.clipboard.writeText(this.closest('div').nextElementSibling.textContent); showToast('Copiado ✓')">Copiar</button>
             </div>
-            <div style="padding:14px 16px; font-size:13px; line-height:1.8; color:var(--text); white-space:pre-wrap;" data-guion>${sec.guion}</div>
+            <div style="padding:14px 16px; font-size:13px; line-height:1.8; color:var(--text); white-space:pre-wrap;">${sec.guion}</div>
           </div>
         `).join('')}
       </div>
@@ -4484,10 +4699,14 @@ function nuevoGuion() {
   toggleTestimonio(true, document.getElementById('testimonio-si'));
 
   document.getElementById('carrusel-config').style.display = 'none';
-  document.getElementById('youtube-config').style.display = 'none';
+  document.getElementById('flujo-short').style.display = 'block';
+  document.getElementById('flujo-youtube').style.display = 'none';
+  document.getElementById('plat-short').classList.add('selected');
+  document.getElementById('plat-youtube').classList.remove('selected');
   state.briefing.slides = 10;
   state.briefing.ytDuracion = 10;
   state.briefing.ytEstilo = 'educativo';
+  state.briefing.ytEstructura = 'viral';
   state.briefing.estructura = null;
   document.getElementById('estructura-selector').style.display = 'none';
 
@@ -4529,13 +4748,77 @@ async function editarConIA() {
   const feedback = document.getElementById('edit-feedback').value.trim();
   if(!feedback) { showToast('Escribí qué querés mejorar', '⚠️'); return; }
   const s = state.script;
-  if(!s.hooks?.length) { showToast('Primero generá un guión', '⚠️'); return; }
+  const b = state.briefing;
+  const formato = b.formato;
+
+  // Validate there's something to edit
+  if(!s.hooks?.length && !s.slides?.length && !s.secciones?.length) {
+    showToast('Primero generá un guión', '⚠️'); return;
+  }
 
   const btn = document.getElementById('btn-edit-ia');
   btn.disabled = true; btn.textContent = '⏳ Aplicando...';
 
-  const hook = s.hooks[s.selectedHook || 0];
-  const prompt = `Tenés este guión para redes sociales y el creador te pide cambios específicos. Aplicá exactamente lo que pide, sin cambiar lo que NO mencionó.
+  let prompt;
+
+  if(formato === 'carrusel' && s.slides?.length) {
+    // Carrusel prompt
+    const slidesResumen = s.slides.map(sl => `Slide ${sl.num} (${sl.tipo}): "${sl.titulo}"${sl.texto ? ' — ' + sl.texto.substring(0,60) : ''}`).join('\n');
+    prompt = `Tenés este carrusel y el creador pide cambios específicos. Aplicá SOLO lo que pide sin cambiar el resto. Mantené el mismo formato de carrusel.
+
+CARRUSEL ACTUAL (${s.slides.length} slides):
+${slidesResumen}
+
+FEEDBACK (aplicar exactamente):
+${feedback}
+
+Respondé SOLO en JSON manteniendo la estructura de carrusel:
+{
+  "slides": [
+    {"num": 1, "tipo": "portada", "titulo": "...", "subtitulo": "..."},
+    {"num": 2, "tipo": "contenido", "titulo": "...", "texto": "..."},
+    ...
+    {"num": ${s.slides.length}, "tipo": "cta", "titulo": "...", "texto": "..."}
+  ],
+  "hooks": [],
+  "problema": "",
+  "solucion": "",
+  "prueba": "",
+  "cta": "${s.cta||''}",
+  "produccion": "${s.produccion||''}"
+}`;
+
+  } else if(formato === 'youtube' && s.secciones?.length) {
+    // YouTube prompt
+    const secResumen = s.secciones.map(sec => `[${sec.timestamp}] ${sec.titulo}: ${sec.guion?.substring(0,80)}...`).join('\n');
+    prompt = `Tenés este guión de YouTube y el creador pide cambios específicos. Aplicá SOLO lo que pide sin cambiar el resto. Mantené el formato de video largo con secciones y timestamps.
+
+GUIÓN ACTUAL:
+Título: ${s.titulo_video || ''}
+${secResumen}
+
+FEEDBACK (aplicar exactamente):
+${feedback}
+
+Respondé SOLO en JSON manteniendo la estructura de YouTube:
+{
+  "titulo_video": "${s.titulo_video||''}",
+  "secciones": [
+    {"timestamp": "0:00", "titulo": "...", "guion": "..."},
+    ...
+  ],
+  "hooks": [],
+  "problema": "",
+  "solucion": "",
+  "prueba": "",
+  "cta": "",
+  "produccion": ""
+}`;
+
+  } else {
+    // Reel prompt
+    const hook = s.hooks?.[s.selectedHook || 0];
+    prompt = `Tenés este guión de reel y el creador pide cambios específicos. Aplicá exactamente lo que pide, sin cambiar lo que NO mencionó. Mantené el formato de reel.
 
 GUIÓN ACTUAL:
 Hook verbal: "${hook?.verbal}"
@@ -4545,12 +4828,10 @@ Solución: ${s.solucion}
 Prueba social: ${s.prueba}
 CTA: ${s.cta}
 
-FEEDBACK DEL CREADOR (aplicar exactamente esto):
+FEEDBACK (aplicar exactamente):
 ${feedback}
 
-Devolvé el guión corregido con los cambios aplicados. Si el feedback pide cambiar el hook, generá 3 nuevas opciones. Si pide cambiar otra sección, mejorala según lo pedido.
-
-Respondé SOLO en JSON con la misma estructura:
+Respondé SOLO en JSON con estructura de reel:
 {
   "hooks": [{"num":1,"tipo":"...","verbal":"...","textual":"..."},{"num":2,"tipo":"...","verbal":"...","textual":"..."},{"num":3,"tipo":"...","verbal":"...","textual":"..."}],
   "problema": "...",
@@ -4559,18 +4840,19 @@ Respondé SOLO en JSON con la misma estructura:
   "cta": "...",
   "produccion": "${s.produccion||''}"
 }`;
+  }
 
   try {
     const response = await fetch('https://curly-brook-7e7b.mktsocialink.workers.dev/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: formato === 'youtube' ? 6000 : 3000, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await response.json();
     if(data.error) throw new Error(data.error.message);
     const text = data.content?.[0]?.text || '';
     const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
-    state.script = { ...parsed, selectedHook: 0 };
+    state.script = { ...state.script, ...parsed, selectedHook: 0 };
     renderScript();
     document.getElementById('edit-feedback').value = '';
     showToast('Guión actualizado ✓ ✨');
@@ -4589,47 +4871,39 @@ async function editarModalConIA() {
   btn.disabled = true; btn.textContent = '⏳ Aplicando...';
 
   const s = state.activeModal.script;
-  const hook = s?.hooks?.[0];
-  const prompt = `Tenés este guión y el creador pide cambios específicos. Aplicá exactamente lo que pide.
+  const formato = state.activeModal.formato;
+  let prompt;
 
-GUIÓN ACTUAL:
-Hook: "${hook?.verbal}"
-Problema: ${s?.problema}
-Solución: ${s?.solucion}
-CTA: ${s?.cta}
-
-FEEDBACK: ${feedback}
-
-Respondé SOLO en JSON:
-{
-  "hooks": [{"num":1,"tipo":"...","verbal":"...","textual":"..."},{"num":2,"tipo":"...","verbal":"...","textual":"..."},{"num":3,"tipo":"...","verbal":"...","textual":"..."}],
-  "problema": "...",
-  "solucion": "...",
-  "prueba": "${s?.prueba||''}",
-  "cta": "...",
-  "produccion": "${s?.produccion||''}"
-}`;
+  if(formato === 'carrusel' && s?.slides?.length) {
+    const slidesResumen = s.slides.map(sl => `Slide ${sl.num} (${sl.tipo}): "${sl.titulo}"${sl.texto?' — '+sl.texto.substring(0,60):''}`).join('\n');
+    prompt = `Carrusel actual:\n${slidesResumen}\n\nFEEDBACK: ${feedback}\n\nRespondé SOLO en JSON con estructura de carrusel:\n{"slides":[{"num":1,"tipo":"portada","titulo":"...","subtitulo":"..."},...],"hooks":[],"problema":"","solucion":"","prueba":"","cta":"${s.cta||''}","produccion":"${s.produccion||''}"}`;
+  } else if(formato === 'youtube' && s?.secciones?.length) {
+    const secResumen = s.secciones.map(sec => `[${sec.timestamp}] ${sec.titulo}: ${sec.guion?.substring(0,80)}...`).join('\n');
+    prompt = `Guión YouTube actual:\nTítulo: ${s.titulo_video||''}\n${secResumen}\n\nFEEDBACK: ${feedback}\n\nRespondé SOLO en JSON con estructura YouTube:\n{"titulo_video":"${s.titulo_video||''}","secciones":[{"timestamp":"0:00","titulo":"...","guion":"..."},...],"hooks":[],"problema":"","solucion":"","prueba":"","cta":"","produccion":""}`;
+  } else {
+    const hook = s?.hooks?.[0];
+    prompt = `Guión de reel actual:\nHook: "${hook?.verbal}"\nProblema: ${s?.problema}\nSolución: ${s?.solucion}\nCTA: ${s?.cta}\n\nFEEDBACK: ${feedback}\n\nRespondé SOLO en JSON con estructura de reel:\n{"hooks":[{"num":1,"tipo":"...","verbal":"...","textual":"..."},{"num":2,"tipo":"...","verbal":"...","textual":"..."},{"num":3,"tipo":"...","verbal":"...","textual":"..."}],"problema":"...","solucion":"...","prueba":"${s?.prueba||''}","cta":"...","produccion":"${s?.produccion||''}"}`;
+  }
 
   try {
     const response = await fetch('https://curly-brook-7e7b.mktsocialink.workers.dev/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 2000, messages: [{ role: 'user', content: prompt }] })
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: formato === 'youtube' ? 6000 : 3000, messages: [{ role: 'user', content: prompt }] })
     });
     const data = await response.json();
     if(data.error) throw new Error(data.error.message);
     const text = data.content?.[0]?.text || '';
     const parsed = JSON.parse(text.replace(/```json|```/g,'').trim());
 
-    // Save updated script
-    const idx = state.scripts.findIndex(s => s.id === state.activeModal.id);
+    // Save updated script preserving format
+    const idx = state.scripts.findIndex(sc => sc.id === state.activeModal.id);
     if(idx >= 0) {
-      state.scripts[idx].script = { ...parsed, selectedHook: 0 };
+      state.scripts[idx].script = { ...s, ...parsed, selectedHook: 0 };
       localStorage.setItem('sm_scripts', JSON.stringify(state.scripts));
       state.activeModal = state.scripts[idx];
     }
 
-    // Re-render modal content
     openScriptModal(state.activeModal.id);
     document.getElementById('modal-edit-feedback').value = '';
     showToast('Guión actualizado ✓ ✨');
